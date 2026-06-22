@@ -3,8 +3,9 @@ import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 
 import { Colors } from '@/constants/theme';
+import { BRAND } from '@/lib/theme-colors';
 
-const ACTIVE = '#208AEF';
+const ACTIVE = BRAND.primary;
 
 export default function TabsLayout() {
   const scheme = useColorScheme();

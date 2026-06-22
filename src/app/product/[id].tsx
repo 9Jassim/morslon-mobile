@@ -11,6 +11,7 @@ import { Spacing } from '@/constants/theme';
 import { fetchProduct } from '@/lib/catalog-api';
 import { resolveProductImage } from '@/lib/images';
 import { useCart } from '@/lib/cart-store';
+import { BRAND } from '@/lib/theme-colors';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   hero: { width: '100%', height: '100%' },
   body: { padding: Spacing.four, gap: Spacing.two },
   priceRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
-  price: { fontSize: 22, fontWeight: '800', color: '#208AEF' },
+  price: { fontSize: 22, fontWeight: '800', color: BRAND.primary },
   compare: { fontSize: 16, color: '#9aa0a6', textDecorationLine: 'line-through' },
   inStock: { color: '#1a7f37' },
   outOfStock: { color: '#d93025' },

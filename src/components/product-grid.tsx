@@ -5,6 +5,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View, type ListRenderItem } fro
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { productThumbnail } from '@/lib/images';
+import { BRAND } from '@/lib/theme-colors';
 import type { Product } from '@/lib/types';
 
 const GAP = Spacing.three;
@@ -78,5 +79,5 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
   imagePlaceholder: { backgroundColor: '#e0e1e6' },
   name: { minHeight: 34 },
-  price: { fontWeight: '700', color: '#208AEF' },
+  price: { fontWeight: '700', color: BRAND.primary },
 });

@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { BRAND } from '@/lib/theme-colors';
 import { useAuth } from '@/lib/auth-context';
 
 type MenuItem = { label: string; icon: keyof typeof Ionicons.glyphMap; href: string };
@@ -54,7 +55,7 @@ export default function AccountScreen() {
               style={styles.row}
               activeOpacity={0.7}
               onPress={() => router.push(item.href as never)}>
-              <Ionicons name={item.icon} size={22} color="#208AEF" />
+              <Ionicons name={item.icon} size={22} color={BRAND.primary} />
               <ThemedText style={styles.rowLabel}>{item.label}</ThemedText>
               <Ionicons name="chevron-forward" size={20} color="#9aa0a6" style={styles.chevron} />
             </TouchableOpacity>

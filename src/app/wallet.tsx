@@ -6,6 +6,7 @@ import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { BRAND } from '@/lib/theme-colors';
 import { fetchWallet } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
 
@@ -70,12 +71,12 @@ export default function WalletScreen() {
 const styles = StyleSheet.create({
   list: { padding: Spacing.three, gap: Spacing.two },
   balanceCard: {
-    backgroundColor: '#208AEF',
+    backgroundColor: BRAND.primary,
     borderRadius: 16,
     padding: Spacing.four,
     marginBottom: Spacing.three,
   },
-  balanceLabel: { color: '#cfe3ff' },
+  balanceLabel: { color: 'rgba(255,255,255,0.85)' },
   balance: { color: '#fff', fontSize: 30, fontWeight: '800' },
   empty: { textAlign: 'center', opacity: 0.6, marginTop: Spacing.four },
   txn: {

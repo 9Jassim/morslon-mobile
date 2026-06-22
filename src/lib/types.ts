@@ -28,6 +28,11 @@ export type AppConfig = {
     whatsapp: string;
     logoUrl: string;
   };
+  theme: {
+    primaryColor: string;
+    secondaryColor: string;
+    accentColor: string;
+  };
   currency: {
     current: { code: string; rate: number } | null;
     all: { code: string; rate: number }[];

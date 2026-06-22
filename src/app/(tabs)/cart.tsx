@@ -8,6 +8,7 @@ import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
 import { useCart, type CartItem } from '@/lib/cart-store';
 import { resolveProductImage } from '@/lib/images';
+import { BRAND } from '@/lib/theme-colors';
 
 export default function CartScreen() {
   const items = useCart((s) => s.items);
@@ -76,14 +77,14 @@ function CartRow({
         <ThemedText style={styles.price}>{(item.price * item.quantity).toFixed(3)} BHD</ThemedText>
         <View style={styles.qtyRow}>
           <TouchableOpacity style={styles.qtyBtn} onPress={() => onQty(item.quantity - 1)}>
-            <Ionicons name="remove" size={18} color="#208AEF" />
+            <Ionicons name="remove" size={18} color={BRAND.primary} />
           </TouchableOpacity>
           <ThemedText style={styles.qty}>{item.quantity}</ThemedText>
           <TouchableOpacity
             style={[styles.qtyBtn, item.quantity >= item.stock && styles.qtyBtnDisabled]}
             disabled={item.quantity >= item.stock}
             onPress={() => onQty(item.quantity + 1)}>
-            <Ionicons name="add" size={18} color="#208AEF" />
+            <Ionicons name="add" size={18} color={BRAND.primary} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.removeBtn} onPress={onRemove}>
             <Ionicons name="trash-outline" size={18} color="#d93025" />
@@ -103,14 +104,14 @@ const styles = StyleSheet.create({
   thumb: { width: 80, height: 80, borderRadius: 12, overflow: 'hidden', backgroundColor: '#f0f0f3' },
   thumbImg: { width: '100%', height: '100%' },
   rowBody: { flex: 1, gap: Spacing.one },
-  price: { fontWeight: '700', color: '#208AEF' },
+  price: { fontWeight: '700', color: BRAND.primary },
   qtyRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, marginTop: Spacing.one },
   qtyBtn: {
     width: 32,
     height: 32,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#208AEF',
+    borderColor: BRAND.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -125,6 +126,6 @@ const styles = StyleSheet.create({
   },
   subtotalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   subtotalLabel: { fontSize: 16 },
-  subtotalValue: { fontSize: 18, fontWeight: '800', color: '#208AEF' },
+  subtotalValue: { fontSize: 18, fontWeight: '800', color: BRAND.primary },
   note: { textAlign: 'center', opacity: 0.6 },
 });

@@ -7,6 +7,7 @@ import {
 
 import { ThemedText } from "@/components/themed-text";
 import { Spacing } from "@/constants/theme";
+import { BRAND } from "@/lib/theme-colors";
 
 type Variant = "primary" | "secondary";
 
@@ -39,7 +40,7 @@ export function Button({
       {...rest}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" ? "#fff" : "#208AEF"} />
+        <ActivityIndicator color={variant === "primary" ? BRAND.onPrimary : BRAND.primary} />
       ) : (
         <ThemedText
           style={[styles.label, variant === "primary" ? styles.labelPrimary : styles.labelSecondary]}
@@ -59,10 +60,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  primary: { backgroundColor: "#208AEF" },
-  secondary: { backgroundColor: "transparent", borderWidth: 1, borderColor: "#208AEF" },
+  primary: { backgroundColor: BRAND.primary },
+  secondary: { backgroundColor: "transparent", borderWidth: 1, borderColor: BRAND.primary },
   disabled: { opacity: 0.5 },
   label: { fontSize: 16, fontWeight: "600" },
-  labelPrimary: { color: "#fff" },
-  labelSecondary: { color: "#208AEF" },
+  labelPrimary: { color: BRAND.onPrimary },
+  labelSecondary: { color: BRAND.primary },
 });

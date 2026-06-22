@@ -1,9 +1,12 @@
 import { api } from "./api";
+import { setBrandFromConfig } from "./theme-colors";
 import type { AppConfig, Category, Product, ProductsResponse } from "./types";
 
 /** GET /api/mobile/config — public app bootstrap payload. */
-export function fetchConfig(): Promise<AppConfig> {
-  return api<AppConfig>("/api/mobile/config", { auth: false });
+export async function fetchConfig(): Promise<AppConfig> {
+  const config = await api<AppConfig>("/api/mobile/config", { auth: false });
+  setBrandFromConfig(config.theme);
+  return config;
 }
 
 /** GET /api/categories — nested category tree (public). */

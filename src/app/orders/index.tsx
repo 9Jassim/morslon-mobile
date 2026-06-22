@@ -7,6 +7,7 @@ import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { BRAND } from '@/lib/theme-colors';
 import { fetchOrders } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
 import type { Order } from '@/lib/types';
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   },
   rowTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   orderNo: { fontWeight: '700' },
-  total: { fontWeight: '700', color: '#208AEF' },
+  total: { fontWeight: '700', color: BRAND.primary },
   rowBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   date: { opacity: 0.6 },
 });

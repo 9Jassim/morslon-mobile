@@ -6,6 +6,7 @@ import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { BRAND } from '@/lib/theme-colors';
 import { fetchOrders } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
 
@@ -93,6 +94,6 @@ const styles = StyleSheet.create({
   itemRow: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.three },
   itemName: { flex: 1 },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  bold: { fontWeight: '800', color: '#208AEF' },
+  bold: { fontWeight: '800', color: BRAND.primary },
   payment: { opacity: 0.6, textTransform: 'capitalize' },
 });
