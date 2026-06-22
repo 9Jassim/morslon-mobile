@@ -26,7 +26,7 @@ export async function login(email: string, password: string): Promise<Customer> 
   return data.customer;
 }
 
-/** Registers a new customer, then logs them in to obtain tokens. */
+/** POST /api/mobile/auth/register — creates the account, stores tokens, returns the customer. */
 export async function register(input: {
   firstName: string;
   lastName: string;
@@ -34,8 +34,13 @@ export async function register(input: {
   password: string;
   phone?: string;
 }): Promise<Customer> {
-  await api("/api/customers/register", { method: "POST", auth: false, body: input });
-  return login(input.email, input.password);
+  const data = await api<LoginResponse>("/api/mobile/auth/register", {
+    method: "POST",
+    auth: false,
+    body: input,
+  });
+  await setTokens(data.accessToken, data.refreshToken);
+  return data.customer;
 }
 
 /** Returns the current customer's profile, or throws ApiError(401) if not logged in. */
