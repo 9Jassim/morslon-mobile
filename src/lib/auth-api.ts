@@ -1,13 +1,8 @@
 import { api } from "./api";
 import { clearTokens, setTokens } from "./auth-storage";
+import type { Customer } from "./types";
 
-export type Customer = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string | null;
-};
+export type { Customer };
 
 type LoginResponse = {
   accessToken: string;

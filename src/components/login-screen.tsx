@@ -1,15 +1,10 @@
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Screen } from "@/components/ui/screen";
 import { Spacing } from "@/constants/theme";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
@@ -34,90 +29,54 @@ export function LoginScreen() {
     }
   }
 
-  const disabled = submitting || !email || !password;
-
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safe}>
-        <ThemedText type="title" style={styles.title}>
-          Morslon
+    <Screen centered style={styles.screen}>
+      <ThemedText type="title" style={styles.title}>
+        Morslon
+      </ThemedText>
+      <ThemedText type="small" style={styles.subtitle}>
+        Sign in to your account
+      </ThemedText>
+
+      <Input
+        placeholder="Email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        autoComplete="email"
+        value={email}
+        onChangeText={setEmail}
+        editable={!submitting}
+      />
+      <Input
+        placeholder="Password"
+        secureTextEntry
+        autoComplete="password"
+        value={password}
+        onChangeText={setPassword}
+        editable={!submitting}
+      />
+
+      {error ? (
+        <ThemedText type="small" style={styles.error}>
+          {error}
         </ThemedText>
-        <ThemedText type="small" style={styles.subtitle}>
-          Sign in to your account
-        </ThemedText>
+      ) : null}
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#9aa0a6"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          autoComplete="email"
-          value={email}
-          onChangeText={setEmail}
-          editable={!submitting}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#9aa0a6"
-          secureTextEntry
-          autoComplete="password"
-          value={password}
-          onChangeText={setPassword}
-          editable={!submitting}
-        />
-
-        {error ? (
-          <ThemedText type="small" style={styles.error}>
-            {error}
-          </ThemedText>
-        ) : null}
-
-        <TouchableOpacity
-          style={[styles.button, disabled && styles.buttonDisabled]}
-          onPress={onSubmit}
-          disabled={disabled}
-        >
-          {submitting ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <ThemedText style={styles.buttonText}>Sign in</ThemedText>
-          )}
-        </TouchableOpacity>
-      </SafeAreaView>
-    </ThemedView>
+      <Button
+        title="Sign in"
+        loading={submitting}
+        disabled={!email || !password}
+        onPress={onSubmit}
+        style={styles.button}
+      />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  safe: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.three,
-  },
+  screen: { gap: Spacing.three, alignItems: "stretch" },
   title: { textAlign: "center" },
   subtitle: { textAlign: "center", marginBottom: Spacing.three, opacity: 0.7 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#d0d4d9",
-    borderRadius: 10,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 14,
-    fontSize: 16,
-    color: "#111",
-    backgroundColor: "#fff",
-  },
   error: { color: "#d93025", textAlign: "center" },
-  button: {
-    backgroundColor: "#208AEF",
-    borderRadius: 10,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: Spacing.two,
-  },
-  buttonDisabled: { opacity: 0.5 },
-  buttonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
+  button: { marginTop: Spacing.two },
 });
