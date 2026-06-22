@@ -8,7 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
 import { BRAND } from '@/lib/theme-colors';
+import { useThemeMode } from '@/lib/theme-mode';
 import { useAuth } from '@/lib/auth-context';
+
+const THEME_ICON = { system: 'phone-portrait-outline', light: 'sunny-outline', dark: 'moon-outline' } as const;
+const THEME_LABEL = { system: 'System', light: 'Light', dark: 'Dark' } as const;
 
 type MenuItem = { label: string; icon: keyof typeof Ionicons.glyphMap; href: string };
 
@@ -22,6 +26,8 @@ const MENU: MenuItem[] = [
 export default function AccountScreen() {
   const router = useRouter();
   const { loading, customer, logout } = useAuth();
+  const mode = useThemeMode((s) => s.mode);
+  const cycleTheme = useThemeMode((s) => s.cycle);
 
   if (loading) {
     return (
@@ -62,6 +68,12 @@ export default function AccountScreen() {
           ))}
         </View>
 
+        <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={cycleTheme}>
+          <Ionicons name={THEME_ICON[mode]} size={22} color={BRAND.primary} />
+          <ThemedText style={styles.rowLabel}>Theme</ThemedText>
+          <ThemedText style={styles.rowValue}>{THEME_LABEL[mode]}</ThemedText>
+        </TouchableOpacity>
+
         <Button title="Log out" variant="secondary" onPress={logout} style={styles.logout} />
       </ScrollView>
     </Screen>
@@ -82,6 +94,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e1e6',
   },
   rowLabel: { fontSize: 16 },
+  rowValue: { fontSize: 16, marginLeft: 'auto', opacity: 0.6 },
   chevron: { marginLeft: 'auto' },
   logout: { marginTop: Spacing.two },
 });

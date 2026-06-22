@@ -1,9 +1,9 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { Stack } from 'expo-router';
-import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider } from '@/lib/auth-context';
 import { queryClient } from '@/lib/query';
 

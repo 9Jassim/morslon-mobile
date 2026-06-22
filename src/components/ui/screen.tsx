@@ -18,7 +18,10 @@ type Props = {
 export function Screen({ children, centered, noPadding, style }: Props) {
   return (
     <ThemedView style={styles.fill}>
+      {/* A header (tab bar or stack header) is always present above, so the top
+          inset is already handled — only pad the remaining edges. */}
       <SafeAreaView
+        edges={["bottom", "left", "right"]}
         style={[
           styles.fill,
           !noPadding && styles.padded,

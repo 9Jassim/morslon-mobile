@@ -42,10 +42,7 @@ export default function HomeScreen() {
         currency={currency}
         header={
           <View style={styles.header}>
-            <ThemedText type="title">{config.data?.store.nameEn ?? 'Morslon'}</ThemedText>
-            <ThemedText type="small" style={styles.subtitle}>
-              Featured products
-            </ThemedText>
+            <ThemedText type="title">Featured</ThemedText>
           </View>
         }
       />
@@ -56,5 +53,4 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   errorBox: { gap: Spacing.three },
   header: { paddingVertical: Spacing.three, gap: Spacing.one },
-  subtitle: { opacity: 0.7 },
 });
