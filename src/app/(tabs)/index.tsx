@@ -6,8 +6,9 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { StyleSheet, View } from 'react-native';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Spacing } from '@/constants/theme';
 import { fetchConfig, fetchProducts } from '@/lib/catalog-api';
+import { BRAND } from '@/lib/theme-colors';
 
 export default function HomeScreen() {
   const config = useQuery({ queryKey: ['config'], queryFn: fetchConfig });
@@ -42,6 +43,7 @@ export default function HomeScreen() {
         currency={currency}
         header={
           <View style={styles.header}>
+            <ThemedText style={styles.eyebrow}>DISCOVER</ThemedText>
             <ThemedText type="title">Featured</ThemedText>
           </View>
         }
@@ -52,5 +54,11 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   errorBox: { gap: Spacing.three },
-  header: { paddingVertical: Spacing.three, gap: Spacing.one },
+  header: { paddingHorizontal: Spacing.half, paddingTop: Spacing.three, paddingBottom: Spacing.three, gap: 2 },
+  eyebrow: {
+    fontFamily: AppFonts.bodyBold,
+    fontSize: 11,
+    letterSpacing: 2.5,
+    color: BRAND.accent,
+  },
 });

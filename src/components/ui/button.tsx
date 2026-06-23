@@ -6,7 +6,7 @@ import {
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { Spacing } from "@/constants/theme";
+import { AppFonts, Radius, Spacing } from "@/constants/theme";
 import { BRAND } from "@/lib/theme-colors";
 
 type Variant = "primary" | "secondary";
@@ -40,7 +40,7 @@ export function Button({
       {...rest}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" ? BRAND.onPrimary : BRAND.primary} />
+        <ActivityIndicator color={variant === "primary" ? BRAND.onPrimary : BRAND.accent} />
       ) : (
         <ThemedText
           style={[styles.label, variant === "primary" ? styles.labelPrimary : styles.labelSecondary]}
@@ -54,16 +54,16 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 10,
+    borderRadius: Radius.pill,
     paddingVertical: 16,
     paddingHorizontal: Spacing.four,
     alignItems: "center",
     justifyContent: "center",
   },
-  primary: { backgroundColor: BRAND.primary },
-  secondary: { backgroundColor: "transparent", borderWidth: 1, borderColor: BRAND.primary },
-  disabled: { opacity: 0.5 },
-  label: { fontSize: 16, fontWeight: "600" },
+  primary: { backgroundColor: BRAND.accent },
+  secondary: { backgroundColor: "transparent", borderWidth: 1.5, borderColor: BRAND.accent },
+  disabled: { opacity: 0.45 },
+  label: { fontFamily: AppFonts.bodyBold, fontSize: 15, letterSpacing: 0.2 },
   labelPrimary: { color: BRAND.onPrimary },
-  labelSecondary: { color: BRAND.primary },
+  labelSecondary: { color: BRAND.accent },
 });

@@ -1,6 +1,6 @@
-import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
+import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { Fonts, ThemeColor } from '@/constants/theme';
+import { AppFonts, Fonts, ThemeColor } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ThemedTextProps = TextProps & {
@@ -31,43 +31,48 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
 }
 
 const styles = StyleSheet.create({
-  small: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: 500,
-  },
-  smallBold: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: 700,
-  },
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: 500,
-  },
+  // Display — characterful serif
   title: {
-    fontSize: 48,
-    fontWeight: 600,
-    lineHeight: 52,
+    fontFamily: AppFonts.display,
+    fontSize: 30,
+    lineHeight: 36,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 32,
-    lineHeight: 44,
-    fontWeight: 600,
+    fontFamily: AppFonts.display,
+    fontSize: 22,
+    lineHeight: 28,
+    letterSpacing: -0.3,
+  },
+  // Body — Manrope
+  default: {
+    fontFamily: AppFonts.body,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  small: {
+    fontFamily: AppFonts.body,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  smallBold: {
+    fontFamily: AppFonts.bodyBold,
+    fontSize: 13,
+    lineHeight: 19,
   },
   link: {
-    lineHeight: 30,
+    fontFamily: AppFonts.bodySemibold,
     fontSize: 14,
+    lineHeight: 28,
   },
   linkPrimary: {
-    lineHeight: 30,
+    fontFamily: AppFonts.bodySemibold,
     fontSize: 14,
+    lineHeight: 28,
     color: '#3c87f7',
   },
   code: {
     fontFamily: Fonts.mono,
-    fontWeight: Platform.select({ android: 700 }) ?? 500,
     fontSize: 12,
   },
 });

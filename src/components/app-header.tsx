@@ -43,14 +43,16 @@ export function AppHeader() {
         <TouchableOpacity
           accessibilityLabel="Search"
           hitSlop={8}
+          style={[styles.iconBtn, { backgroundColor: theme.backgroundElement }]}
           onPress={() => router.push('/search')}>
-          <Ionicons name="search-outline" size={24} color={theme.text} />
+          <Ionicons name="search-outline" size={20} color={theme.text} />
         </TouchableOpacity>
         <TouchableOpacity
           accessibilityLabel="Notifications"
           hitSlop={8}
+          style={[styles.iconBtn, { backgroundColor: theme.backgroundElement }]}
           onPress={() => router.push('/notifications')}>
-          <Ionicons name="notifications-outline" size={24} color={theme.text} />
+          <Ionicons name="notifications-outline" size={20} color={theme.text} />
         </TouchableOpacity>
       </View>
     </View>
@@ -67,7 +69,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   logoWrap: { flex: 1 },
-  logo: { width: 120, height: 32, alignSelf: 'flex-start' },
-  logoText: { fontSize: 22 },
-  actions: { flexDirection: 'row', alignItems: 'center', gap: 18 },
+  logo: { width: 120, height: 34, alignSelf: 'flex-start' },
+  logoText: { fontSize: 24, letterSpacing: -0.5 },
+  actions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  iconBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
+

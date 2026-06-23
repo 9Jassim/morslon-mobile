@@ -7,7 +7,8 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { fetchProduct } from '@/lib/catalog-api';
 import { resolveProductImage } from '@/lib/images';
 import { useCart } from '@/lib/cart-store';
@@ -15,6 +16,7 @@ import { BRAND } from '@/lib/theme-colors';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const theme = useTheme();
   const add = useCart((s) => s.add);
   const [added, setAdded] = useState(false);
 
@@ -28,7 +30,7 @@ export default function ProductDetailScreen() {
     return (
       <Screen centered>
         <Stack.Screen options={{ headerShown: true, title: '' }} />
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={BRAND.accent} />
       </Screen>
     );
   }
@@ -53,36 +55,53 @@ export default function ProductDetailScreen() {
   }
 
   return (
-    <View style={styles.fill}>
+    <View style={[styles.fill, { backgroundColor: theme.background }]}>
       <Stack.Screen options={{ headerShown: true, title: '' }} />
-      <ScrollView contentContainerStyle={styles.scroll}>
-        <View style={styles.heroWrap}>
-          {hero ? <Image source={{ uri: hero }} style={styles.hero} contentFit="cover" /> : null}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <View style={[styles.heroWrap, { backgroundColor: theme.backgroundElement }]}>
+          {hero ? <Image source={{ uri: hero }} style={styles.hero} contentFit="cover" transition={200} /> : null}
+          {onSale ? (
+            <View style={styles.saleTag}>
+              <ThemedText style={styles.saleTagText}>SALE</ThemedText>
+            </View>
+          ) : null}
         </View>
 
         <View style={styles.body}>
+          {product.category ? (
+            <ThemedText style={styles.eyebrow}>{product.category.toUpperCase()}</ThemedText>
+          ) : null}
           <ThemedText type="title">{product.nameEn}</ThemedText>
 
           <View style={styles.priceRow}>
-            <ThemedText style={styles.price}>{product.price.toFixed(3)} BHD</ThemedText>
+            <ThemedText style={styles.price}>
+              {product.price.toFixed(3)} <ThemedText style={styles.cur}>BHD</ThemedText>
+            </ThemedText>
             {onSale ? (
-              <ThemedText style={styles.compare}>{product.comparePrice!.toFixed(3)}</ThemedText>
+              <ThemedText themeColor="textSecondary" style={styles.compare}>
+                {product.comparePrice!.toFixed(3)}
+              </ThemedText>
             ) : null}
           </View>
 
-          <ThemedText type="small" style={outOfStock ? styles.outOfStock : styles.inStock}>
-            {outOfStock ? 'Out of stock' : `In stock (${product.stock})`}
-          </ThemedText>
+          <View style={[styles.stockPill, { backgroundColor: outOfStock ? '#d930251a' : BRAND.tint }]}>
+            <View style={[styles.dot, { backgroundColor: outOfStock ? '#d93025' : BRAND.accent }]} />
+            <ThemedText style={[styles.stockText, { color: outOfStock ? '#d93025' : BRAND.accent }]}>
+              {outOfStock ? 'Out of stock' : `In stock · ${product.stock} available`}
+            </ThemedText>
+          </View>
 
           {product.descriptionEn ? (
-            <ThemedText style={styles.description}>{product.descriptionEn}</ThemedText>
+            <ThemedText themeColor="textSecondary" style={styles.description}>
+              {product.descriptionEn}
+            </ThemedText>
           ) : null}
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.border }]}>
         <Button
-          title={added ? 'Added ✓' : outOfStock ? 'Out of stock' : 'Add to cart'}
+          title={added ? 'Added to cart ✓' : outOfStock ? 'Out of stock' : 'Add to cart'}
           onPress={onAdd}
           disabled={outOfStock}
         />
@@ -92,21 +111,41 @@ export default function ProductDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  fill: { flex: 1, backgroundColor: '#fff' },
+  fill: { flex: 1 },
   scroll: { paddingBottom: Spacing.six },
-  heroWrap: { width: '100%', aspectRatio: 1, backgroundColor: '#f0f0f3' },
+  heroWrap: { width: '100%', aspectRatio: 1 },
   hero: { width: '100%', height: '100%' },
+  saleTag: {
+    position: 'absolute',
+    top: Spacing.three,
+    left: Spacing.three,
+    backgroundColor: BRAND.accent,
+    borderRadius: Radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  saleTagText: { fontFamily: AppFonts.bodyBold, fontSize: 11, letterSpacing: 1.5, color: '#fff' },
   body: { padding: Spacing.four, gap: Spacing.two },
-  priceRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
-  price: { fontSize: 22, fontWeight: '800', color: BRAND.primary },
-  compare: { fontSize: 16, color: '#9aa0a6', textDecorationLine: 'line-through' },
-  inStock: { color: '#1a7f37' },
-  outOfStock: { color: '#d93025' },
-  description: { marginTop: Spacing.two, lineHeight: 22, opacity: 0.85 },
+  eyebrow: { fontFamily: AppFonts.bodyBold, fontSize: 11, letterSpacing: 2, color: BRAND.accent },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: Spacing.three, marginTop: Spacing.one },
+  price: { fontFamily: AppFonts.displayBold, fontSize: 26, color: BRAND.accent },
+  cur: { fontFamily: AppFonts.body, fontSize: 14, color: BRAND.accent },
+  compare: { fontSize: 16, textDecorationLine: 'line-through' },
+  stockPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    alignSelf: 'flex-start',
+    borderRadius: Radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginTop: Spacing.one,
+  },
+  dot: { width: 7, height: 7, borderRadius: 4 },
+  stockText: { fontFamily: AppFonts.bodySemibold, fontSize: 12 },
+  description: { marginTop: Spacing.three, lineHeight: 23 },
   footer: {
     padding: Spacing.four,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#e0e1e6',
-    backgroundColor: '#fff',
   },
 });

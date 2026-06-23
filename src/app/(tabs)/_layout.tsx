@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
 import { AppHeader } from '@/components/app-header';
+import { AppFonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { BRAND } from '@/lib/theme-colors';
 
@@ -12,9 +13,10 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         header: () => <AppHeader />,
-        tabBarActiveTintColor: BRAND.primary,
+        tabBarActiveTintColor: BRAND.accent,
         tabBarInactiveTintColor: theme.textSecondary,
-        tabBarStyle: { backgroundColor: theme.background },
+        tabBarStyle: { backgroundColor: theme.background, borderTopColor: theme.border },
+        tabBarLabelStyle: { fontFamily: AppFonts.bodySemibold, fontSize: 11 },
       }}>
       <Tabs.Screen
         name="index"
