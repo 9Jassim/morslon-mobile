@@ -65,8 +65,8 @@ function youtubeHtml(id: string): string {
 var player;
 function send(m){var s=JSON.stringify(m);if(window.ReactNativeWebView){window.ReactNativeWebView.postMessage(s)}else{parent.postMessage(s,'*')}}
 var tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.body.appendChild(tag);
-function onYouTubeIframeAPIReady(){player=new YT.Player('p',{videoId:'${id}',playerVars:{autoplay:1,mute:1,controls:0,modestbranding:1,rel:0,playsinline:1,fs:0,disablekb:1,iv_load_policy:3},events:{
-onReady:function(e){e.target.playVideo();send({type:'ready',d:e.target.getDuration()})},
+function onYouTubeIframeAPIReady(){player=new YT.Player('p',{videoId:'${id}',playerVars:{autoplay:1,mute:0,controls:0,modestbranding:1,rel:0,playsinline:1,fs:0,disablekb:1,iv_load_policy:3},events:{
+onReady:function(e){e.target.unMute();e.target.setVolume(100);e.target.playVideo();send({type:'ready',d:e.target.getDuration()})},
 onStateChange:function(e){if(e.data===0)send({type:'ended'})}}})}
 setInterval(function(){if(player&&player.getCurrentTime){var d=player.getDuration()||0,t=player.getCurrentTime()||0;if(d>0)send({type:'time',t:t,d:d})}},200);
 function handle(ev){var d=ev.data;if(typeof d!=='string')return;if(d==='pause'&&player&&player.pauseVideo)player.pauseVideo();else if(d==='play'&&player&&player.playVideo)player.playVideo()}
