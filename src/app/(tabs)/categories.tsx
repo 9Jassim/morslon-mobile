@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -6,7 +7,8 @@ import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View } from 
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { fetchCategories } from '@/lib/catalog-api';
 import { resolveProductImage } from '@/lib/images';
@@ -60,13 +62,18 @@ export default function CategoriesScreen() {
 }
 
 function CategoryRow({ category, onPress }: { category: Category; onPress: () => void }) {
+  const theme = useTheme();
   const uri = resolveProductImage(category.image);
   return (
-    <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={onPress}>
-      <View style={styles.thumb}>
+    <TouchableOpacity
+      style={[styles.row, { backgroundColor: theme.surface, borderColor: theme.border }]}
+      activeOpacity={0.7}
+      onPress={onPress}>
+      <View style={[styles.thumb, { backgroundColor: theme.backgroundElement }]}>
         {uri ? <Image source={{ uri }} style={styles.thumbImg} contentFit="cover" /> : null}
       </View>
       <ThemedText style={styles.rowText}>{category.nameEn}</ThemedText>
+      <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} style={styles.chevron} />
     </TouchableOpacity>
   );
 }
@@ -79,9 +86,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.three,
-    paddingVertical: Spacing.two,
+    padding: Spacing.two,
+    borderRadius: Radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
   },
-  thumb: { width: 56, height: 56, borderRadius: 12, overflow: 'hidden', backgroundColor: '#f0f0f3' },
+  thumb: { width: 56, height: 56, borderRadius: Radius.sm, overflow: 'hidden' },
   thumbImg: { width: '100%', height: '100%' },
-  rowText: { fontSize: 16, fontWeight: '500' },
+  rowText: { fontFamily: AppFonts.bodySemibold, fontSize: 16 },
+  chevron: { marginLeft: 'auto' },
 });

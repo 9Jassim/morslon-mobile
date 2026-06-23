@@ -6,7 +6,8 @@ import { LoginScreen } from '@/components/login-screen';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { BRAND } from '@/lib/theme-colors';
 import { useThemeMode } from '@/lib/theme-mode';
@@ -26,6 +27,7 @@ const MENU: MenuItem[] = [
 
 export default function AccountScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const { loading, customer, logout } = useAuth();
   const mode = useThemeMode((s) => s.mode);
   const cycleTheme = useThemeMode((s) => s.cycle);
@@ -47,33 +49,43 @@ export default function AccountScreen() {
     <Screen noPadding>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
+          <View style={[styles.avatar, { backgroundColor: BRAND.tint }]}>
+            <ThemedText style={styles.avatarText}>
+              {customer.firstName.charAt(0)}
+              {customer.lastName.charAt(0)}
+            </ThemedText>
+          </View>
           <ThemedText type="title">
             {customer.firstName} {customer.lastName}
           </ThemedText>
-          <ThemedText type="small" style={styles.email}>
+          <ThemedText type="small" themeColor="textSecondary">
             {customer.email}
           </ThemedText>
         </View>
 
-        <View style={styles.menu}>
-          {MENU.map((item) => (
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          {MENU.map((item, i) => (
             <TouchableOpacity
               key={item.href}
-              style={styles.row}
+              style={[styles.row, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.border }]}
               activeOpacity={0.7}
               onPress={() => router.push(item.href as never)}>
-              <Ionicons name={item.icon} size={22} color={BRAND.primary} />
+              <Ionicons name={item.icon} size={20} color={BRAND.accent} />
               <ThemedText style={styles.rowLabel}>{item.label}</ThemedText>
-              <Ionicons name="chevron-forward" size={20} color="#9aa0a6" style={styles.chevron} />
+              <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} style={styles.chevron} />
             </TouchableOpacity>
           ))}
         </View>
 
-        <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={cycleTheme}>
-          <Ionicons name={THEME_ICON[mode]} size={22} color={BRAND.primary} />
-          <ThemedText style={styles.rowLabel}>Theme</ThemedText>
-          <ThemedText style={styles.rowValue}>{THEME_LABEL[mode]}</ThemedText>
-        </TouchableOpacity>
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={cycleTheme}>
+            <Ionicons name={THEME_ICON[mode]} size={20} color={BRAND.accent} />
+            <ThemedText style={styles.rowLabel}>Theme</ThemedText>
+            <ThemedText themeColor="textSecondary" style={styles.rowValue}>
+              {THEME_LABEL[mode]}
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
 
         <Button title="Log out" variant="secondary" onPress={logout} style={styles.logout} />
       </ScrollView>
@@ -83,19 +95,29 @@ export default function AccountScreen() {
 
 const styles = StyleSheet.create({
   scroll: { padding: Spacing.four, paddingBottom: TAB_BAR_CLEARANCE, gap: Spacing.four },
-  header: { gap: Spacing.one },
-  email: { opacity: 0.7 },
-  menu: { gap: Spacing.one },
+  header: { alignItems: 'center', gap: Spacing.one, paddingVertical: Spacing.two },
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.one,
+  },
+  avatarText: { fontFamily: AppFonts.displayBold, fontSize: 24, color: BRAND.accent },
+  card: {
+    borderRadius: Radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: Spacing.three,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.three,
     paddingVertical: Spacing.three,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#e0e1e6',
   },
-  rowLabel: { fontSize: 16 },
-  rowValue: { fontSize: 16, marginLeft: 'auto', opacity: 0.6 },
+  rowLabel: { fontFamily: AppFonts.body, fontSize: 15 },
+  rowValue: { fontSize: 15, marginLeft: 'auto' },
   chevron: { marginLeft: 'auto' },
   logout: { marginTop: Spacing.two },
 });

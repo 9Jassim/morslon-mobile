@@ -5,12 +5,14 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { BRAND } from '@/lib/theme-colors';
 import { fetchWallet } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
 
 export default function WalletScreen() {
+  const theme = useTheme();
   const { customer } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['wallet'],
@@ -44,7 +46,7 @@ export default function WalletScreen() {
             <ThemedText style={styles.empty}>No transactions yet.</ThemedText>
           }
           renderItem={({ item }) => (
-            <View style={styles.txn}>
+            <View style={[styles.txn, { borderBottomColor: theme.border }]}>
               <View style={styles.txnLeft}>
                 <ThemedText style={styles.txnType}>{item.type}</ThemedText>
                 {item.note ? (
@@ -71,13 +73,13 @@ export default function WalletScreen() {
 const styles = StyleSheet.create({
   list: { padding: Spacing.three, gap: Spacing.two },
   balanceCard: {
-    backgroundColor: BRAND.primary,
-    borderRadius: 16,
+    backgroundColor: BRAND.accent,
+    borderRadius: Radius.lg,
     padding: Spacing.four,
     marginBottom: Spacing.three,
   },
   balanceLabel: { color: 'rgba(255,255,255,0.85)' },
-  balance: { color: '#fff', fontSize: 30, fontWeight: '800' },
+  balance: { color: '#fff', fontFamily: AppFonts.displayBold, fontSize: 34 },
   empty: { textAlign: 'center', opacity: 0.6, marginTop: Spacing.four },
   txn: {
     flexDirection: 'row',

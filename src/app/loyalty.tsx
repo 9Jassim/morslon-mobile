@@ -5,11 +5,13 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { fetchLoyalty } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
 
 export default function LoyaltyScreen() {
+  const theme = useTheme();
   const { customer } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['loyalty'],
@@ -44,15 +46,21 @@ export default function LoyaltyScreen() {
           }
           ListEmptyComponent={<ThemedText style={styles.empty}>No rewards available.</ThemedText>}
           renderItem={({ item }) => (
-            <View style={styles.reward}>
+            <View style={[styles.reward, { borderBottomColor: theme.border }]}>
               <View style={styles.rewardLeft}>
                 <ThemedText style={styles.rewardName}>{item.nameEn}</ThemedText>
                 <ThemedText type="small" style={styles.rewardCost}>
                   {item.pointsCost} points
                 </ThemedText>
               </View>
-              <View style={[styles.pill, item.canAfford ? styles.pillOn : styles.pillOff]}>
-                <ThemedText type="small" style={item.canAfford ? styles.pillOnText : styles.pillOffText}>
+              <View
+                style={[
+                  styles.pill,
+                  item.canAfford ? styles.pillOn : { backgroundColor: theme.backgroundElement },
+                ]}>
+                <ThemedText
+                  type="small"
+                  style={item.canAfford ? styles.pillOnText : { color: theme.textSecondary }}>
                   {item.canAfford ? 'Redeemable' : 'Locked'}
                 </ThemedText>
               </View>
@@ -68,28 +76,26 @@ const styles = StyleSheet.create({
   list: { padding: Spacing.three, gap: Spacing.two },
   balanceCard: {
     backgroundColor: '#1a7f37',
-    borderRadius: 16,
+    borderRadius: Radius.lg,
     padding: Spacing.four,
     marginBottom: Spacing.three,
     gap: 2,
   },
   balanceLabel: { color: '#d7f0dd' },
-  balance: { color: '#fff', fontSize: 34, fontWeight: '800' },
+  balance: { color: '#fff', fontFamily: AppFonts.displayBold, fontSize: 38 },
   empty: { textAlign: 'center', opacity: 0.6, marginTop: Spacing.four },
   reward: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: Spacing.two,
+    paddingVertical: Spacing.three,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#e0e1e6',
+    borderBottomColor: 'transparent',
   },
   rewardLeft: { gap: 2 },
-  rewardName: { fontWeight: '600' },
+  rewardName: { fontFamily: AppFonts.bodySemibold },
   rewardCost: { opacity: 0.7 },
-  pill: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 2 },
+  pill: { borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 3 },
   pillOn: { backgroundColor: '#e6f4ea' },
-  pillOff: { backgroundColor: '#f0f0f3' },
   pillOnText: { color: '#1a7f37' },
-  pillOffText: { color: '#9aa0a6' },
 });

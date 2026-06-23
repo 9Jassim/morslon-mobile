@@ -6,7 +6,8 @@ import { AuthRequired } from '@/components/auth-required';
 import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
-import { Spacing } from '@/constants/theme';
+import { AppFonts, Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { BRAND } from '@/lib/theme-colors';
 import { fetchOrders } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
@@ -52,15 +53,19 @@ export default function OrdersScreen() {
 }
 
 function OrderRow({ order, onPress }: { order: Order; onPress: () => void }) {
+  const theme = useTheme();
   return (
-    <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.row, { backgroundColor: theme.surface, borderColor: theme.border }]}
+      activeOpacity={0.7}
+      onPress={onPress}>
       <View style={styles.rowTop}>
         <ThemedText style={styles.orderNo}>#{order.orderNumber}</ThemedText>
         <ThemedText style={styles.total}>{order.total.toFixed(3)} BHD</ThemedText>
       </View>
       <View style={styles.rowBottom}>
         <StatusBadge status={order.status} />
-        <ThemedText type="small" style={styles.date}>
+        <ThemedText type="small" themeColor="textSecondary">
           {new Date(order.createdAt).toLocaleDateString()}
         </ThemedText>
       </View>
@@ -72,13 +77,12 @@ const styles = StyleSheet.create({
   list: { padding: Spacing.three, gap: Spacing.two },
   row: {
     padding: Spacing.three,
-    borderRadius: 12,
-    backgroundColor: '#f7f8fa',
+    borderRadius: Radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
     gap: Spacing.two,
   },
   rowTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  orderNo: { fontWeight: '700' },
-  total: { fontWeight: '700', color: BRAND.primary },
+  orderNo: { fontFamily: AppFonts.bodyBold },
+  total: { fontFamily: AppFonts.displayBold, color: BRAND.accent },
   rowBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  date: { opacity: 0.6 },
 });
