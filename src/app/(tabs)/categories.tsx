@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { fetchCategories } from '@/lib/catalog-api';
 import { resolveProductImage } from '@/lib/images';
 import type { Category } from '@/lib/types';
@@ -72,7 +73,7 @@ function CategoryRow({ category, onPress }: { category: Category; onPress: () =>
 
 const styles = StyleSheet.create({
   errorBox: { gap: Spacing.three },
-  list: { padding: Spacing.three, gap: Spacing.two },
+  list: { padding: Spacing.three, paddingBottom: TAB_BAR_CLEARANCE, gap: Spacing.two },
   heading: { marginBottom: Spacing.two },
   row: {
     flexDirection: 'row',

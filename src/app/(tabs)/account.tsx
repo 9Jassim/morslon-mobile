@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { BRAND } from '@/lib/theme-colors';
 import { useThemeMode } from '@/lib/theme-mode';
 import { useAuth } from '@/lib/auth-context';
@@ -81,7 +82,7 @@ export default function AccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { padding: Spacing.four, gap: Spacing.four },
+  scroll: { padding: Spacing.four, paddingBottom: TAB_BAR_CLEARANCE, gap: Spacing.four },
   header: { gap: Spacing.one },
   email: { opacity: 0.7 },
   menu: { gap: Spacing.one },

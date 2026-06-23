@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { useCart, type CartItem } from '@/lib/cart-store';
 import { resolveProductImage } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
   removeBtn: { marginLeft: 'auto', padding: Spacing.one },
   footer: {
     padding: Spacing.four,
+    paddingBottom: TAB_BAR_CLEARANCE,
     gap: Spacing.two,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: '#e0e1e6',

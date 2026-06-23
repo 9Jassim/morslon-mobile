@@ -4,6 +4,7 @@ import { FlatList, Pressable, StyleSheet, View, type ListRenderItem } from 'reac
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { productThumbnail } from '@/lib/images';
@@ -93,7 +94,7 @@ export function ProductGrid({
 }
 
 const styles = StyleSheet.create({
-  list: { paddingHorizontal: GAP, paddingBottom: Spacing.six, gap: GAP },
+  list: { paddingHorizontal: GAP, paddingBottom: TAB_BAR_CLEARANCE, gap: GAP },
   row: { gap: GAP },
   cell: { flex: 1, maxWidth: '50%' },
   card: { gap: Spacing.two },
