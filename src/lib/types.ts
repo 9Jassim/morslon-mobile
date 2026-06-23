@@ -66,6 +66,94 @@ export type ProductsResponse = {
   hasMore: boolean;
 };
 
+/** GET /api/mobile/home — home screen content. */
+export type HomeBanner = {
+  id: string;
+  image: string;
+  link: string | null;
+  titleEn: string;
+  subtitleEn: string | null;
+  slides?: { image: string; link?: string }[] | null;
+};
+
+export type HomeCategory = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  slug: string;
+  image: string | null;
+};
+
+export type HighlightProduct = {
+  id: string;
+  nameEn: string;
+  price: number;
+  comparePrice: number | null;
+  stock: number;
+  images: string[];
+};
+
+export type HomeHighlight = {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  thumbnail: string;
+  mediaType: 'video' | 'embed' | string;
+  mediaUrl: string;
+  ctaLink: string | null;
+  productId: string | null;
+  product: HighlightProduct | null;
+};
+
+export type HomePopup = {
+  id: string;
+  type: string;
+  titleEn: string;
+  messageEn: string;
+  ctaTextEn: string | null;
+  ctaLink: string | null;
+  dismissable: boolean;
+};
+
+/** Minimal product shape used in home rails. */
+export type HomeProduct = Pick<
+  Product,
+  'id' | 'nameEn' | 'nameAr' | 'slug' | 'price' | 'comparePrice' | 'stock' | 'images' | 'category'
+>;
+
+export type HomeSectionItem = { image?: string; link?: string; titleEn?: string; titleAr?: string };
+
+export type HomeSection = {
+  id: string;
+  type: 'PRODUCTS' | 'BANNER_CAROUSEL' | 'POSTER_GRID';
+  showTitle: boolean;
+  nameEn: string;
+  nameAr: string;
+  products?: HomeProduct[];
+  items?: HomeSectionItem[];
+};
+
+export type HomeCategorySection = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  slug: string;
+  products: HomeProduct[];
+};
+
+export type HomeData = {
+  hero: HomeBanner[];
+  promo: HomeBanner[];
+  mid: HomeBanner[];
+  discover: HomeBanner[];
+  promoCollection: HomeBanner[];
+  categories: HomeCategory[];
+  categorySections: HomeCategorySection[];
+  highlights: HomeHighlight[];
+  popups: HomePopup[];
+  sections: HomeSection[];
+};
+
 /** GET /api/categories — nested category tree. */
 export type Category = {
   id: string;

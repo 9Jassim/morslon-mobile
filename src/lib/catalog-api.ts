@@ -1,12 +1,17 @@
 import { api } from "./api";
 import { setBrandFromConfig } from "./theme-colors";
-import type { AppConfig, Category, Product, ProductsResponse } from "./types";
+import type { AppConfig, Category, HomeData, Product, ProductsResponse } from "./types";
 
 /** GET /api/mobile/config — public app bootstrap payload. */
 export async function fetchConfig(): Promise<AppConfig> {
   const config = await api<AppConfig>("/api/mobile/config", { auth: false });
   setBrandFromConfig(config.theme);
   return config;
+}
+
+/** GET /api/mobile/home — banners + home sections (public). */
+export function fetchHome(): Promise<HomeData> {
+  return api<HomeData>("/api/mobile/home", { auth: false });
 }
 
 /** GET /api/categories — nested category tree (public). */

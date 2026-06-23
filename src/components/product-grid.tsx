@@ -13,14 +13,20 @@ import type { Product } from '@/lib/types';
 
 const GAP = Spacing.three;
 
+/** Minimal product shape a card needs (full Product is assignable). */
+export type CardProduct = Pick<Product, 'id' | 'nameEn' | 'price' | 'comparePrice' | 'images'>;
+
 export function ProductCard({
   product,
   currency = 'BHD',
   index = 0,
+  width,
 }: {
-  product: Product;
+  product: CardProduct;
   currency?: string;
   index?: number;
+  /** Fixed width for horizontal rails; omit for flex grid cells. */
+  width?: number;
 }) {
   const router = useRouter();
   const theme = useTheme();
@@ -28,7 +34,9 @@ export function ProductCard({
   const onSale = product.comparePrice != null && product.comparePrice > product.price;
 
   return (
-    <Animated.View entering={FadeInDown.delay(Math.min(index, 8) * 55).springify().damping(18)} style={styles.cell}>
+    <Animated.View
+      entering={FadeInDown.delay(Math.min(index, 8) * 55).springify().damping(18)}
+      style={width != null ? { width } : styles.cell}>
       <Pressable
         style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
         onPress={() => router.push({ pathname: '/product/[id]', params: { id: product.id } })}>

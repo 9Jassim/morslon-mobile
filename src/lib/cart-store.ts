@@ -10,9 +10,12 @@ export type CartItem = {
   stock: number;
 };
 
+/** Minimal fields the cart needs to add an item (full Product is assignable). */
+export type AddableProduct = Pick<Product, "id" | "nameEn" | "price" | "stock" | "images">;
+
 type CartState = {
   items: CartItem[];
-  add: (product: Product, qty?: number) => void;
+  add: (product: AddableProduct, qty?: number) => void;
   remove: (productId: string) => void;
   setQty: (productId: string, qty: number) => void;
   clear: () => void;
