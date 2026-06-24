@@ -1,5 +1,5 @@
 import { reloadAppAsync } from 'expo';
-import { I18nManager } from 'react-native';
+import { I18nManager, Platform } from 'react-native';
 import { create } from 'zustand';
 
 import { getPref, PREF_LOCALE, setPref } from './prefs';
@@ -231,6 +231,21 @@ type LocaleState = {
  */
 function applyDirection(locale: Locale) {
   const wantRTL = locale === 'ar';
+
+  // Web: set the document direction directly — no forceRTL/reload (forceRTL
+  // doesn't update isRTL on web, which would cause an infinite reload loop).
+  if (Platform.OS === 'web') {
+    I18nManager.allowRTL(true);
+    I18nManager.forceRTL(wantRTL);
+    try {
+      document?.documentElement?.setAttribute('dir', wantRTL ? 'rtl' : 'ltr');
+    } catch {
+      /* no document */
+    }
+    return;
+  }
+
+  // Native: forceRTL only applies after a reload, so reload once on change.
   if (I18nManager.isRTL !== wantRTL) {
     I18nManager.allowRTL(true);
     I18nManager.forceRTL(wantRTL);
