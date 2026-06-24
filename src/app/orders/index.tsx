@@ -11,10 +11,12 @@ import { useTheme } from '@/hooks/use-theme';
 import { BRAND } from '@/lib/theme-colors';
 import { fetchOrders } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
+import { useI18n } from '@/lib/i18n';
 import type { Order } from '@/lib/types';
 
 export default function OrdersScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { customer } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['orders'],
@@ -22,18 +24,18 @@ export default function OrdersScreen() {
     enabled: !!customer,
   });
 
-  if (!customer) return <AuthRequired message="Sign in to view your orders." />;
+  if (!customer) return <AuthRequired message={t('orders.signin')} />;
 
   return (
     <Screen noPadding>
-      <Stack.Screen options={{ headerShown: true, title: 'My Orders' }} />
+      <Stack.Screen options={{ headerShown: true, title: t('orders.title') }} />
       {isLoading ? (
         <Screen centered>
           <ActivityIndicator size="large" />
         </Screen>
       ) : (data?.length ?? 0) === 0 ? (
         <Screen centered>
-          <ThemedText>You have no orders yet.</ThemedText>
+          <ThemedText>{t('orders.none')}</ThemedText>
         </Screen>
       ) : (
         <FlatList

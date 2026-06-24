@@ -7,8 +7,10 @@ import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { fetchWishlist } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
+import { useI18n } from '@/lib/i18n';
 
 export default function WishlistScreen() {
+  const { t } = useI18n();
   const { loading, customer } = useAuth();
 
   const { data, isLoading } = useQuery({
@@ -25,7 +27,7 @@ export default function WishlistScreen() {
     );
   }
   if (!customer) {
-    return <AuthRequired message="Sign in to see your saved products." />;
+    return <AuthRequired message={t('wishlist.signin')} />;
   }
   if (isLoading) {
     return (
@@ -37,7 +39,7 @@ export default function WishlistScreen() {
   if ((data?.length ?? 0) === 0) {
     return (
       <Screen centered>
-        <ThemedText>Your wishlist is empty.</ThemedText>
+        <ThemedText>{t('wishlist.empty')}</ThemedText>
       </Screen>
     );
   }

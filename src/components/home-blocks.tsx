@@ -15,6 +15,7 @@ import { ProductCard } from '@/components/product-grid';
 import { ThemedText } from '@/components/themed-text';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
 import type { HomeCategory, HomeProduct } from '@/lib/types';
@@ -184,6 +185,7 @@ export function BannerCarousel({ title, slides }: { title?: string; slides: Slid
 export function CategoryStrip({ categories }: { categories: HomeCategory[] }) {
   const router = useRouter();
   const theme = useTheme();
+  const { pick } = useI18n();
   if (categories.length === 0) return null;
   return (
     <FlatList
@@ -207,7 +209,7 @@ export function CategoryStrip({ categories }: { categories: HomeCategory[] }) {
               )}
             </View>
             <ThemedText type="small" numberOfLines={1} style={styles.chipLabel}>
-              {item.nameEn}
+              {pick(item.nameEn, item.nameAr)}
             </ThemedText>
           </Pressable>
         );
@@ -245,6 +247,7 @@ export function ProductRail({
   seeAllSlug?: string;
 }) {
   const router = useRouter();
+  const { t } = useI18n();
   if (products.length === 0) return null;
   return (
     <View style={styles.section}>
@@ -258,7 +261,7 @@ export function ProductRail({
             <Pressable
               onPress={() => router.push({ pathname: '/category/[slug]', params: { slug: seeAllSlug } })}
               hitSlop={8}>
-              <ThemedText style={styles.seeAll}>View all ›</ThemedText>
+              <ThemedText style={styles.seeAll}>{t('common.viewAll')} ›</ThemedText>
             </Pressable>
           ) : null}
         </View>

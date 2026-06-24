@@ -9,9 +9,11 @@ import { Spacing } from '@/constants/theme';
 import { BRAND } from '@/lib/theme-colors';
 import { fetchOrders } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
+import { useI18n } from '@/lib/i18n';
 
 export default function OrderDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { t } = useI18n();
   const { customer } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['orders'],
@@ -50,7 +52,7 @@ export default function OrderDetailScreen() {
         </View>
 
         <View style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>Items</ThemedText>
+          <ThemedText style={styles.sectionTitle}>{t('orders.items')}</ThemedText>
           {order.items.map((item, idx) => (
             <View key={`${item.productId}-${idx}`} style={styles.itemRow}>
               <ThemedText numberOfLines={2} style={styles.itemName}>
@@ -62,14 +64,14 @@ export default function OrderDetailScreen() {
         </View>
 
         <View style={styles.section}>
-          <SummaryRow label="Subtotal" value={order.subtotal} />
-          {order.discount > 0 ? <SummaryRow label="Discount" value={-order.discount} /> : null}
-          <SummaryRow label="Shipping" value={order.shippingCost} />
-          <SummaryRow label="Total" value={order.total} bold />
+          <SummaryRow label={t('orders.subtotal')} value={order.subtotal} />
+          {order.discount > 0 ? <SummaryRow label={t('orders.discount')} value={-order.discount} /> : null}
+          <SummaryRow label={t('orders.shipping')} value={order.shippingCost} />
+          <SummaryRow label={t('orders.total')} value={order.total} bold />
         </View>
 
         <ThemedText type="small" style={styles.payment}>
-          Payment: {order.paymentMethod} · {order.paymentStatus}
+          {t('orders.payment')}: {order.paymentMethod} · {order.paymentStatus}
         </ThemedText>
       </ScrollView>
     </Screen>

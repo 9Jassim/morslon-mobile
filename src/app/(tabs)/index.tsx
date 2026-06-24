@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { AppFonts, Spacing } from '@/constants/theme';
 import { fetchHome } from '@/lib/catalog-api';
+import { useI18n } from '@/lib/i18n';
 import { BRAND } from '@/lib/theme-colors';
 import type { HomeBanner, HomeSectionItem } from '@/lib/types';
 
@@ -38,6 +39,7 @@ const bannerToSlide = (b: HomeBanner): Slide => ({
 });
 
 export default function HomeScreen() {
+  const { t, pick } = useI18n();
   const { data, isLoading, isError, refetch } = useQuery({ queryKey: ['home'], queryFn: fetchHome });
 
   if (isLoading) {
@@ -51,8 +53,8 @@ export default function HomeScreen() {
   if (isError) {
     return (
       <Screen centered style={styles.errorBox}>
-        <ThemedText>Couldn’t load the home page.</ThemedText>
-        <Button title="Retry" onPress={() => refetch()} />
+        <ThemedText>{t('home.failed')}</ThemedText>
+        <Button title={t('common.retry')} onPress={() => refetch()} />
       </Screen>
     );
   }
@@ -86,7 +88,7 @@ export default function HomeScreen() {
 
         {/* Custom home sections */}
         {sections.map((section) => {
-          const title = section.showTitle ? section.nameEn : undefined;
+          const title = section.showTitle ? pick(section.nameEn, section.nameAr) : undefined;
           if (section.type === 'PRODUCTS') {
             return <ProductRail key={section.id} title={title} products={section.products ?? []} />;
           }
@@ -98,13 +100,13 @@ export default function HomeScreen() {
 
         {/* Highlighted Products */}
         {promoCollection.length > 0 ? (
-          <BannerCarousel title="Highlighted Products" slides={bannersToSlides(promoCollection)} />
+          <BannerCarousel title={t('home.highlighted')} slides={bannersToSlides(promoCollection)} />
         ) : null}
 
         {/* Category product rows, with mid banners interleaved every 2 */}
         {categorySections.map((cat, i) => (
           <Fragment key={cat.id}>
-            <ProductRail title={cat.nameEn} products={cat.products} seeAllSlug={cat.slug} />
+            <ProductRail title={pick(cat.nameEn, cat.nameAr)} products={cat.products} seeAllSlug={cat.slug} />
             {(i + 1) % 2 === 0 && mid[Math.floor(i / 2)] ? (
               <FullBanner banner={bannerToSlide(mid[Math.floor(i / 2)])} />
             ) : null}
@@ -113,13 +115,13 @@ export default function HomeScreen() {
 
         {/* Discover more */}
         {discover.length > 0 ? (
-          <PosterGrid title="Discover More" items={discover.map((b) => ({ image: b.image, link: b.link ?? undefined }))} />
+          <PosterGrid title={t('home.discoverMore')} items={discover.map((b) => ({ image: b.image, link: b.link ?? undefined }))} />
         ) : null}
 
         {empty ? (
           <View style={styles.empty}>
-            <ThemedText style={styles.eyebrow}>WELCOME</ThemedText>
-            <ThemedText type="title">Nothing here yet</ThemedText>
+            <ThemedText style={styles.eyebrow}>{t('home.discover')}</ThemedText>
+            <ThemedText type="title">{t('home.empty')}</ThemedText>
           </View>
         ) : null}
       </ScrollView>

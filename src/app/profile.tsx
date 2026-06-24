@@ -7,23 +7,25 @@ import { Screen } from '@/components/ui/screen';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/lib/auth-context';
+import { useI18n } from '@/lib/i18n';
 
 export default function ProfileScreen() {
   const theme = useTheme();
+  const { t } = useI18n();
   const { customer } = useAuth();
-  if (!customer) return <AuthRequired message="Sign in to view your profile." />;
+  if (!customer) return <AuthRequired message={t('profile.signin')} />;
 
   return (
     <Screen style={styles.screen}>
-      <Stack.Screen options={{ headerShown: true, title: 'Profile' }} />
+      <Stack.Screen options={{ headerShown: true, title: t('profile.title') }} />
       <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        <Field label="First name" value={customer.firstName} border={theme.border} />
-        <Field label="Last name" value={customer.lastName} border={theme.border} />
-        <Field label="Email" value={customer.email} border={theme.border} />
-        <Field label="Phone" value={customer.phone || '—'} />
+        <Field label={t('profile.first')} value={customer.firstName} border={theme.border} />
+        <Field label={t('profile.last')} value={customer.lastName} border={theme.border} />
+        <Field label={t('profile.email')} value={customer.email} border={theme.border} />
+        <Field label={t('profile.phone')} value={customer.phone || '—'} />
       </View>
       <ThemedText type="small" themeColor="textSecondary" style={styles.note}>
-        Editing your profile is coming soon.
+        {t('profile.soon')}
       </ThemedText>
     </Screen>
   );

@@ -11,11 +11,13 @@ import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { fetchCategories } from '@/lib/catalog-api';
+import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import type { Category } from '@/lib/types';
 
 export default function CategoriesScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['categories'],
     queryFn: fetchCategories,
@@ -31,8 +33,8 @@ export default function CategoriesScreen() {
   if (isError) {
     return (
       <Screen centered style={styles.errorBox}>
-        <ThemedText>Couldn’t load categories.</ThemedText>
-        <Button title="Retry" onPress={() => refetch()} />
+        <ThemedText>{t('categories.failed')}</ThemedText>
+        <Button title={t('common.retry')} onPress={() => refetch()} />
       </Screen>
     );
   }
@@ -47,7 +49,7 @@ export default function CategoriesScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <ThemedText type="title" style={styles.heading}>
-            Categories
+            {t('categories.title')}
           </ThemedText>
         }
         renderItem={({ item }) => (
@@ -63,6 +65,7 @@ export default function CategoriesScreen() {
 
 function CategoryRow({ category, onPress }: { category: Category; onPress: () => void }) {
   const theme = useTheme();
+  const { pick } = useI18n();
   const uri = resolveProductImage(category.image);
   return (
     <TouchableOpacity
@@ -72,7 +75,7 @@ function CategoryRow({ category, onPress }: { category: Category; onPress: () =>
       <View style={[styles.thumb, { backgroundColor: theme.backgroundElement }]}>
         {uri ? <Image source={{ uri }} style={styles.thumbImg} contentFit="cover" /> : null}
       </View>
-      <ThemedText style={styles.rowText}>{category.nameEn}</ThemedText>
+      <ThemedText style={styles.rowText}>{pick(category.nameEn, category.nameAr)}</ThemedText>
       <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} style={styles.chevron} />
     </TouchableOpacity>
   );

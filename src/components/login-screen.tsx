@@ -8,10 +8,12 @@ import { Screen } from "@/components/ui/screen";
 import { Spacing } from "@/constants/theme";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { useI18n } from "@/lib/i18n";
 
 /** Email/password login against the Morslon backend's mobile auth endpoint. */
 export function LoginScreen() {
   const { login } = useAuth();
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +25,7 @@ export function LoginScreen() {
     try {
       await login(email.trim(), password);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Something went wrong. Try again.");
+      setError(e instanceof ApiError ? e.message : t("auth.failed"));
     } finally {
       setSubmitting(false);
     }
@@ -35,11 +37,11 @@ export function LoginScreen() {
         Morslon
       </ThemedText>
       <ThemedText type="small" style={styles.subtitle}>
-        Sign in to your account
+        {t("auth.signInTitle")}
       </ThemedText>
 
       <Input
-        placeholder="Email"
+        placeholder={t("auth.email")}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
@@ -48,7 +50,7 @@ export function LoginScreen() {
         editable={!submitting}
       />
       <Input
-        placeholder="Password"
+        placeholder={t("auth.password")}
         secureTextEntry
         autoComplete="password"
         value={password}
@@ -63,7 +65,7 @@ export function LoginScreen() {
       ) : null}
 
       <Button
-        title="Sign in"
+        title={t("auth.signIn")}
         loading={submitting}
         disabled={!email || !password}
         onPress={onSubmit}

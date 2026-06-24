@@ -9,11 +9,13 @@ import { Screen } from '@/components/ui/screen';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useCart, type CartItem } from '@/lib/cart-store';
+import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
 
 export default function CartScreen() {
   const theme = useTheme();
+  const { t } = useI18n();
   const items = useCart((s) => s.items);
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
@@ -23,9 +25,9 @@ export default function CartScreen() {
     return (
       <Screen centered style={styles.empty}>
         <Ionicons name="bag-handle-outline" size={48} color={theme.textSecondary} />
-        <ThemedText type="title">Your cart is empty</ThemedText>
+        <ThemedText type="title">{t('cart.empty')}</ThemedText>
         <ThemedText type="small" themeColor="textSecondary" style={styles.center}>
-          Browse products and add them here.
+          {t('cart.emptyHint')}
         </ThemedText>
       </Screen>
     );
@@ -40,7 +42,7 @@ export default function CartScreen() {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <ThemedText type="title" style={styles.heading}>
-            Cart
+            {t('cart.title')}
           </ThemedText>
         }
         renderItem={({ item }) => (
@@ -49,12 +51,12 @@ export default function CartScreen() {
       />
       <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.border }]}>
         <View style={styles.subtotalRow}>
-          <ThemedText themeColor="textSecondary">Subtotal</ThemedText>
+          <ThemedText themeColor="textSecondary">{t('cart.subtotal')}</ThemedText>
           <ThemedText style={styles.subtotalValue}>
             {subtotal.toFixed(3)} <ThemedText style={styles.cur}>BHD</ThemedText>
           </ThemedText>
         </View>
-        <Button title="Checkout" onPress={() => {}} />
+        <Button title={t('cart.checkout')} onPress={() => {}} />
       </View>
     </Screen>
   );

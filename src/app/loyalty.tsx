@@ -9,9 +9,11 @@ import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { fetchLoyalty } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
+import { useI18n } from '@/lib/i18n';
 
 export default function LoyaltyScreen() {
   const theme = useTheme();
+  const { t } = useI18n();
   const { customer } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['loyalty'],
@@ -19,11 +21,11 @@ export default function LoyaltyScreen() {
     enabled: !!customer,
   });
 
-  if (!customer) return <AuthRequired message="Sign in to see your points and rewards." />;
+  if (!customer) return <AuthRequired message={t('loyalty.signin')} />;
 
   return (
     <Screen noPadding>
-      <Stack.Screen options={{ headerShown: true, title: 'Loyalty' }} />
+      <Stack.Screen options={{ headerShown: true, title: t('loyalty.title') }} />
       {isLoading ? (
         <Screen centered>
           <ActivityIndicator size="large" />
@@ -36,21 +38,21 @@ export default function LoyaltyScreen() {
           ListHeaderComponent={
             <View style={styles.balanceCard}>
               <ThemedText type="small" style={styles.balanceLabel}>
-                Points balance
+                {t('loyalty.points')}
               </ThemedText>
               <ThemedText style={styles.balance}>{data?.balance ?? 0}</ThemedText>
               <ThemedText type="small" style={styles.balanceLabel}>
-                {data?.totalEarned ?? 0} earned all-time
+                {data?.totalEarned ?? 0} {t('loyalty.earned')}
               </ThemedText>
             </View>
           }
-          ListEmptyComponent={<ThemedText style={styles.empty}>No rewards available.</ThemedText>}
+          ListEmptyComponent={<ThemedText style={styles.empty}>{t('loyalty.none')}</ThemedText>}
           renderItem={({ item }) => (
             <View style={[styles.reward, { borderBottomColor: theme.border }]}>
               <View style={styles.rewardLeft}>
                 <ThemedText style={styles.rewardName}>{item.nameEn}</ThemedText>
                 <ThemedText type="small" style={styles.rewardCost}>
-                  {item.pointsCost} points
+                  {item.pointsCost} {t('loyalty.cost')}
                 </ThemedText>
               </View>
               <View
@@ -61,7 +63,7 @@ export default function LoyaltyScreen() {
                 <ThemedText
                   type="small"
                   style={item.canAfford ? styles.pillOnText : { color: theme.textSecondary }}>
-                  {item.canAfford ? 'Redeemable' : 'Locked'}
+                  {item.canAfford ? t('loyalty.redeemable') : t('loyalty.locked')}
                 </ThemedText>
               </View>
             </View>

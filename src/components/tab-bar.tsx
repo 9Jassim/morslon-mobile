@@ -14,6 +14,7 @@ import { ThemedText } from '@/components/themed-text';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useCart } from '@/lib/cart-store';
+import { useI18n } from '@/lib/i18n';
 import { BRAND } from '@/lib/theme-colors';
 
 /** Minimal shape of the props expo-router's <Tabs tabBar> passes us. */
@@ -35,9 +36,17 @@ const ICONS: Record<string, [IconName, IconName]> = {
   account: ['person-outline', 'person'],
 };
 
+const TAB_LABEL: Record<string, 'tabs.home' | 'tabs.categories' | 'tabs.wishlist' | 'tabs.account'> = {
+  index: 'tabs.home',
+  categories: 'tabs.categories',
+  wishlist: 'tabs.wishlist',
+  account: 'tabs.account',
+};
+
 export function TabBar({ state, descriptors, navigation }: TabBarProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
 
   function onPress(routeKey: string, routeName: string, isFocused: boolean) {
     const event = navigation.emit({ type: 'tabPress', target: routeKey, canPreventDefault: true });
@@ -49,7 +58,8 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
       <View style={[styles.bar, { backgroundColor: theme.surface, borderColor: theme.border }]}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
-          const label = descriptors[route.key]?.options.title ?? route.name;
+          const labelKey = TAB_LABEL[route.name];
+          const label = labelKey ? t(labelKey) : (descriptors[route.key]?.options.title ?? route.name);
 
           if (route.name === 'cart') {
             return (

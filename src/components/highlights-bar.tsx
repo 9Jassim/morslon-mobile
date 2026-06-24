@@ -10,6 +10,7 @@ import { ThemedText } from '@/components/themed-text';
 import { AppFonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useCart } from '@/lib/cart-store';
+import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
 import type { HomeHighlight } from '@/lib/types';
@@ -58,6 +59,7 @@ function StoryViewer({
 }) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t } = useI18n();
   const addToCart = useCart((s) => s.add);
   const [index, setIndex] = useState(startIndex);
   const [progress, setProgress] = useState(0);
@@ -148,7 +150,7 @@ function StoryViewer({
           <View style={[styles.ctaRow, { bottom: insets.bottom + 24 }]}>
             {current.ctaLink ? (
               <Pressable style={[styles.cta, styles.ctaOutline]} onPress={onViewMore}>
-                <ThemedText style={styles.ctaOutlineText}>View more</ThemedText>
+                <ThemedText style={styles.ctaOutlineText}>{t('story.viewMore')}</ThemedText>
                 <Ionicons name="arrow-forward" size={16} color="#fff" />
               </Pressable>
             ) : null}
@@ -159,7 +161,7 @@ function StoryViewer({
                 disabled={added || current.product.stock <= 0}>
                 <Ionicons name={added ? 'checkmark' : 'bag-add'} size={16} color="#fff" />
                 <ThemedText style={styles.ctaText}>
-                  {added ? 'Added' : current.product.stock <= 0 ? 'Sold out' : 'Add to cart'}
+                  {added ? t('story.added') : current.product.stock <= 0 ? t('story.soldOut') : t('story.addToCart')}
                 </ThemedText>
               </Pressable>
             ) : null}

@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useI18n } from '@/lib/i18n';
 import { productThumbnail } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
 import type { Product } from '@/lib/types';
@@ -14,7 +15,7 @@ import type { Product } from '@/lib/types';
 const GAP = Spacing.three;
 
 /** Minimal product shape a card needs (full Product is assignable). */
-export type CardProduct = Pick<Product, 'id' | 'nameEn' | 'price' | 'comparePrice' | 'images'>;
+export type CardProduct = Pick<Product, 'id' | 'nameEn' | 'nameAr' | 'price' | 'comparePrice' | 'images'>;
 
 export function ProductCard({
   product,
@@ -30,6 +31,7 @@ export function ProductCard({
 }) {
   const router = useRouter();
   const theme = useTheme();
+  const { pick } = useI18n();
   const uri = productThumbnail(product.images);
   const onSale = product.comparePrice != null && product.comparePrice > product.price;
 
@@ -52,7 +54,7 @@ export function ProductCard({
         </View>
         <View style={styles.meta}>
           <ThemedText type="small" numberOfLines={2} themeColor="textSecondary" style={styles.name}>
-            {product.nameEn}
+            {pick(product.nameEn, product.nameAr)}
           </ThemedText>
           <View style={styles.priceRow}>
             <ThemedText style={styles.price}>

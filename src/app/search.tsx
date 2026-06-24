@@ -9,8 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
 import { fetchProducts } from '@/lib/catalog-api';
+import { useI18n } from '@/lib/i18n';
 
 export default function SearchScreen() {
+  const { t } = useI18n();
   const [term, setTerm] = useState('');
   const query = term.trim();
 
@@ -22,10 +24,10 @@ export default function SearchScreen() {
 
   return (
     <Screen noPadding>
-      <Stack.Screen options={{ headerShown: true, title: 'Search' }} />
+      <Stack.Screen options={{ headerShown: true, title: t('search.title') }} />
       <View style={styles.searchBar}>
         <Input
-          placeholder="Search products…"
+          placeholder={t('search.placeholder')}
           autoFocus
           autoCapitalize="none"
           returnKeyType="search"
@@ -37,7 +39,7 @@ export default function SearchScreen() {
       {query.length < 2 ? (
         <View style={styles.center}>
           <ThemedText type="small" style={styles.dim}>
-            Type at least 2 characters to search.
+            {t('search.hint')}
           </ThemedText>
         </View>
       ) : isLoading || isFetching ? (
@@ -46,7 +48,7 @@ export default function SearchScreen() {
         </View>
       ) : (data?.products.length ?? 0) === 0 ? (
         <View style={styles.center}>
-          <ThemedText>No products found for “{query}”.</ThemedText>
+          <ThemedText>{t('search.none')}</ThemedText>
         </View>
       ) : (
         <ProductGrid products={data?.products ?? []} />

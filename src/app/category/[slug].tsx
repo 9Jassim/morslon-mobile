@@ -7,10 +7,12 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Screen } from '@/components/ui/screen';
 import { fetchProducts } from '@/lib/catalog-api';
+import { useI18n } from '@/lib/i18n';
 
 export default function CategoryScreen() {
+  const { t } = useI18n();
   const { slug } = useLocalSearchParams<{ slug: string }>();
-  const title = slug ? slug.replace(/-/g, ' ') : 'Category';
+  const title = slug ? slug.replace(/-/g, ' ') : t('categories.title');
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['products', { category: slug }],
@@ -27,12 +29,12 @@ export default function CategoryScreen() {
         </Screen>
       ) : isError ? (
         <Screen centered>
-          <ThemedText>Couldn’t load products.</ThemedText>
-          <Button title="Retry" onPress={() => refetch()} />
+          <ThemedText>{t('home.failed')}</ThemedText>
+          <Button title={t('common.retry')} onPress={() => refetch()} />
         </Screen>
       ) : (data?.products.length ?? 0) === 0 ? (
         <Screen centered>
-          <ThemedText>No products in this category yet.</ThemedText>
+          <ThemedText>{t('categories.empty')}</ThemedText>
         </Screen>
       ) : (
         <ProductGrid products={data?.products ?? []} />

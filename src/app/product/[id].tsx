@@ -10,6 +10,7 @@ import { Screen } from '@/components/ui/screen';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { fetchProduct } from '@/lib/catalog-api';
+import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import { useCart } from '@/lib/cart-store';
 import { BRAND } from '@/lib/theme-colors';
@@ -17,6 +18,7 @@ import { BRAND } from '@/lib/theme-colors';
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const theme = useTheme();
+  const { t, pick } = useI18n();
   const add = useCart((s) => s.add);
   const [added, setAdded] = useState(false);
 
@@ -38,7 +40,7 @@ export default function ProductDetailScreen() {
     return (
       <Screen centered>
         <Stack.Screen options={{ headerShown: true, title: '' }} />
-        <ThemedText>Product not found.</ThemedText>
+        <ThemedText>{t('product.notFound')}</ThemedText>
       </Screen>
     );
   }
@@ -71,7 +73,7 @@ export default function ProductDetailScreen() {
           {product.category ? (
             <ThemedText style={styles.eyebrow}>{product.category.toUpperCase()}</ThemedText>
           ) : null}
-          <ThemedText type="title">{product.nameEn}</ThemedText>
+          <ThemedText type="title">{pick(product.nameEn, product.nameAr)}</ThemedText>
 
           <View style={styles.priceRow}>
             <ThemedText style={styles.price}>
@@ -87,13 +89,13 @@ export default function ProductDetailScreen() {
           <View style={[styles.stockPill, { backgroundColor: outOfStock ? '#d930251a' : BRAND.tint }]}>
             <View style={[styles.dot, { backgroundColor: outOfStock ? '#d93025' : BRAND.accent }]} />
             <ThemedText style={[styles.stockText, { color: outOfStock ? '#d93025' : BRAND.accent }]}>
-              {outOfStock ? 'Out of stock' : `In stock · ${product.stock} available`}
+              {outOfStock ? t('product.outOfStock') : `${t('product.inStock')} · ${product.stock} ${t('product.available')}`}
             </ThemedText>
           </View>
 
-          {product.descriptionEn ? (
+          {pick(product.descriptionEn, product.descriptionAr) ? (
             <ThemedText themeColor="textSecondary" style={styles.description}>
-              {product.descriptionEn}
+              {pick(product.descriptionEn, product.descriptionAr)}
             </ThemedText>
           ) : null}
         </View>
@@ -101,7 +103,7 @@ export default function ProductDetailScreen() {
 
       <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.border }]}>
         <Button
-          title={added ? 'Added to cart ✓' : outOfStock ? 'Out of stock' : 'Add to cart'}
+          title={added ? t('product.added') : outOfStock ? t('product.outOfStock') : t('product.addToCart')}
           onPress={onAdd}
           disabled={outOfStock}
         />

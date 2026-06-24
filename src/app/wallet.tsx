@@ -10,9 +10,11 @@ import { useTheme } from '@/hooks/use-theme';
 import { BRAND } from '@/lib/theme-colors';
 import { fetchWallet } from '@/lib/account-api';
 import { useAuth } from '@/lib/auth-context';
+import { useI18n } from '@/lib/i18n';
 
 export default function WalletScreen() {
   const theme = useTheme();
+  const { t } = useI18n();
   const { customer } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['wallet'],
@@ -20,11 +22,11 @@ export default function WalletScreen() {
     enabled: !!customer,
   });
 
-  if (!customer) return <AuthRequired message="Sign in to view your wallet." />;
+  if (!customer) return <AuthRequired message={t('wallet.signin')} />;
 
   return (
     <Screen noPadding>
-      <Stack.Screen options={{ headerShown: true, title: 'Wallet' }} />
+      <Stack.Screen options={{ headerShown: true, title: t('wallet.title') }} />
       {isLoading ? (
         <Screen centered>
           <ActivityIndicator size="large" />
@@ -37,13 +39,13 @@ export default function WalletScreen() {
           ListHeaderComponent={
             <View style={styles.balanceCard}>
               <ThemedText type="small" style={styles.balanceLabel}>
-                Balance
+                {t('wallet.balance')}
               </ThemedText>
               <ThemedText style={styles.balance}>{(data?.balance ?? 0).toFixed(3)} BHD</ThemedText>
             </View>
           }
           ListEmptyComponent={
-            <ThemedText style={styles.empty}>No transactions yet.</ThemedText>
+            <ThemedText style={styles.empty}>{t('wallet.none')}</ThemedText>
           }
           renderItem={({ item }) => (
             <View style={[styles.txn, { borderBottomColor: theme.border }]}>

@@ -9,6 +9,8 @@ import { Screen } from '@/components/ui/screen';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
+import { useI18n } from '@/lib/i18n';
+import { useLocaleStore } from '@/lib/i18n';
 import { BRAND } from '@/lib/theme-colors';
 import { useThemeMode } from '@/lib/theme-mode';
 import { useAuth } from '@/lib/auth-context';
@@ -16,18 +18,21 @@ import { useAuth } from '@/lib/auth-context';
 const THEME_ICON = { system: 'phone-portrait-outline', light: 'sunny-outline', dark: 'moon-outline' } as const;
 const THEME_LABEL = { system: 'System', light: 'Light', dark: 'Dark' } as const;
 
-type MenuItem = { label: string; icon: keyof typeof Ionicons.glyphMap; href: string };
+type MenuItem = { key: 'account.orders' | 'account.wallet' | 'account.loyalty' | 'account.profile'; icon: keyof typeof Ionicons.glyphMap; href: string };
 
 const MENU: MenuItem[] = [
-  { label: 'My Orders', icon: 'receipt-outline', href: '/orders' },
-  { label: 'Wallet', icon: 'wallet-outline', href: '/wallet' },
-  { label: 'Loyalty & Rewards', icon: 'star-outline', href: '/loyalty' },
-  { label: 'Profile', icon: 'person-outline', href: '/profile' },
+  { key: 'account.orders', icon: 'receipt-outline', href: '/orders' },
+  { key: 'account.wallet', icon: 'wallet-outline', href: '/wallet' },
+  { key: 'account.loyalty', icon: 'star-outline', href: '/loyalty' },
+  { key: 'account.profile', icon: 'person-outline', href: '/profile' },
 ];
 
 export default function AccountScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const { t } = useI18n();
+  const locale = useLocaleStore((s) => s.locale);
+  const toggleLocale = useLocaleStore((s) => s.toggle);
   const { loading, customer, logout } = useAuth();
   const mode = useThemeMode((s) => s.mode);
   const cycleTheme = useThemeMode((s) => s.cycle);
@@ -71,23 +76,33 @@ export default function AccountScreen() {
               activeOpacity={0.7}
               onPress={() => router.push(item.href as never)}>
               <Ionicons name={item.icon} size={20} color={BRAND.accent} />
-              <ThemedText style={styles.rowLabel}>{item.label}</ThemedText>
+              <ThemedText style={styles.rowLabel}>{t(item.key)}</ThemedText>
               <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} style={styles.chevron} />
             </TouchableOpacity>
           ))}
         </View>
 
         <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={cycleTheme}>
+          <TouchableOpacity style={styles.row} activeOpacity={0.7} onPress={toggleLocale}>
+            <Ionicons name="language-outline" size={20} color={BRAND.accent} />
+            <ThemedText style={styles.rowLabel}>{t('account.language')}</ThemedText>
+            <ThemedText themeColor="textSecondary" style={styles.rowValue}>
+              {locale === 'ar' ? 'العربية' : 'English'}
+            </ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.row, { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.border }]}
+            activeOpacity={0.7}
+            onPress={cycleTheme}>
             <Ionicons name={THEME_ICON[mode]} size={20} color={BRAND.accent} />
-            <ThemedText style={styles.rowLabel}>Theme</ThemedText>
+            <ThemedText style={styles.rowLabel}>{t('account.theme')}</ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.rowValue}>
               {THEME_LABEL[mode]}
             </ThemedText>
           </TouchableOpacity>
         </View>
 
-        <Button title="Log out" variant="secondary" onPress={logout} style={styles.logout} />
+        <Button title={t('account.logout')} variant="secondary" onPress={logout} style={styles.logout} />
       </ScrollView>
     </Screen>
   );
