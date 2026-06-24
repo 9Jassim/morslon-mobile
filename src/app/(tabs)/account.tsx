@@ -30,7 +30,7 @@ const MENU: MenuItem[] = [
 export default function AccountScreen() {
   const router = useRouter();
   const theme = useTheme();
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
   const locale = useLocaleStore((s) => s.locale);
   const toggleLocale = useLocaleStore((s) => s.toggle);
   const { loading, customer, logout } = useAuth();
@@ -77,7 +77,7 @@ export default function AccountScreen() {
               onPress={() => router.push(item.href as never)}>
               <Ionicons name={item.icon} size={20} color={BRAND.accent} />
               <ThemedText style={styles.rowLabel}>{t(item.key)}</ThemedText>
-              <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} style={styles.chevron} />
+              <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={18} color={theme.textSecondary} style={styles.chevron} />
             </TouchableOpacity>
           ))}
         </View>

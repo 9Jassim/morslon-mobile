@@ -65,7 +65,7 @@ export default function CategoriesScreen() {
 
 function CategoryRow({ category, onPress }: { category: Category; onPress: () => void }) {
   const theme = useTheme();
-  const { pick } = useI18n();
+  const { pick, isRTL } = useI18n();
   const uri = resolveProductImage(category.image);
   return (
     <TouchableOpacity
@@ -76,7 +76,7 @@ function CategoryRow({ category, onPress }: { category: Category; onPress: () =>
         {uri ? <Image source={{ uri }} style={styles.thumbImg} contentFit="cover" /> : null}
       </View>
       <ThemedText style={styles.rowText}>{pick(category.nameEn, category.nameAr)}</ThemedText>
-      <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} style={styles.chevron} />
+      <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={20} color={theme.textSecondary} style={styles.chevron} />
     </TouchableOpacity>
   );
 }

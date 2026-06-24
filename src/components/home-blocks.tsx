@@ -151,6 +151,7 @@ export function BannerCarousel({ title, slides }: { title?: string; slides: Slid
         decelerationRate="fast"
         onScroll={onScroll}
         scrollEventThrottle={16}
+        style={styles.ltr}
         contentContainerStyle={{ paddingHorizontal: SIDE_PAD }}
         getItemLayout={(_, i) => ({ length: SNAP, offset: SNAP * i, index: i })}
         onTouchStart={() => (pausedRef.current = true)}
@@ -247,7 +248,7 @@ export function ProductRail({
   seeAllSlug?: string;
 }) {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
   if (products.length === 0) return null;
   return (
     <View style={styles.section}>
@@ -261,7 +262,9 @@ export function ProductRail({
             <Pressable
               onPress={() => router.push({ pathname: '/category/[slug]', params: { slug: seeAllSlug } })}
               hitSlop={8}>
-              <ThemedText style={styles.seeAll}>{t('common.viewAll')} ›</ThemedText>
+              <ThemedText style={styles.seeAll}>
+                {isRTL ? `‹ ${t('common.viewAll')}` : `${t('common.viewAll')} ›`}
+              </ThemedText>
             </Pressable>
           ) : null}
         </View>
@@ -304,6 +307,7 @@ export function PosterGrid({ title, items }: { title?: string; items: { image?: 
 
 const styles = StyleSheet.create({
   fill: { width: '100%', height: '100%' },
+  ltr: { direction: 'ltr' },
   section: { gap: Spacing.three, marginTop: Spacing.five },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingHorizontal: PAD },
   titleInner: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
