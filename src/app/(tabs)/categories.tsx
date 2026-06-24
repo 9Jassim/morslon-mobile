@@ -96,5 +96,5 @@ const styles = StyleSheet.create({
   thumb: { width: 56, height: 56, borderRadius: Radius.sm, overflow: 'hidden' },
   thumbImg: { width: '100%', height: '100%' },
   rowText: { fontFamily: AppFonts.bodySemibold, fontSize: 16 },
-  chevron: { marginLeft: 'auto' },
+  chevron: { marginStart: 'auto' },
 });

@@ -1,4 +1,8 @@
+import { reloadAppAsync } from 'expo';
+import { I18nManager } from 'react-native';
 import { create } from 'zustand';
+
+import { getPref, PREF_LOCALE, setPref } from './prefs';
 
 export type Locale = 'en' | 'ar';
 
@@ -221,11 +225,37 @@ type LocaleState = {
   toggle: () => void;
 };
 
+/**
+ * Apply native layout direction for the locale. forceRTL only takes effect after
+ * a reload, so we reload when it changes (Instagram-style "restart to apply").
+ */
+function applyDirection(locale: Locale) {
+  const wantRTL = locale === 'ar';
+  if (I18nManager.isRTL !== wantRTL) {
+    I18nManager.allowRTL(true);
+    I18nManager.forceRTL(wantRTL);
+    reloadAppAsync().catch(() => {});
+  }
+}
+
 export const useLocaleStore = create<LocaleState>((set, get) => ({
   locale: 'en',
-  setLocale: (locale) => set({ locale }),
-  toggle: () => set({ locale: get().locale === 'en' ? 'ar' : 'en' }),
+  setLocale: (locale) => {
+    set({ locale });
+    setPref(PREF_LOCALE, locale);
+    applyDirection(locale);
+  },
+  toggle: () => get().setLocale(get().locale === 'en' ? 'ar' : 'en'),
 }));
+
+/** Load the persisted locale at boot and align native RTL (may reload once). */
+export async function loadPersistedLocale(): Promise<void> {
+  const saved = await getPref(PREF_LOCALE);
+  if (saved === 'ar' || saved === 'en') {
+    useLocaleStore.setState({ locale: saved });
+    applyDirection(saved);
+  }
+}
 
 /** Translation + locale helpers. */
 export function useI18n() {

@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.three,
   },
   rowLabel: { fontFamily: AppFonts.body, fontSize: 15 },
-  rowValue: { fontSize: 15, marginLeft: 'auto' },
-  chevron: { marginLeft: 'auto' },
+  rowValue: { fontSize: 15, marginStart: 'auto' },
+  chevron: { marginStart: 'auto' },
   logout: { marginTop: Spacing.two },
 });

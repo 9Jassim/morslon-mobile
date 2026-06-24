@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   qtyBtnDisabled: { opacity: 0.35 },
   qty: { fontFamily: AppFonts.bodySemibold, fontSize: 15, minWidth: 20, textAlign: 'center' },
-  removeBtn: { marginLeft: 'auto', padding: Spacing.one },
+  removeBtn: { marginStart: 'auto', padding: Spacing.one },
   footer: {
     padding: Spacing.four,
     paddingBottom: TAB_BAR_CLEARANCE,
