@@ -43,7 +43,7 @@ export function PopupBanner({ banner }: { banner: HomePopupBanner | null }) {
     <Modal transparent visible={visible} animationType="fade" onRequestClose={dismiss}>
       <Pressable style={styles.backdrop} onPress={dismiss}>
         <View style={styles.card}>
-          <Pressable onPress={onPress}>
+          <Pressable style={styles.imageWrap} onPress={onPress}>
             {uri ? <Image source={{ uri }} style={styles.image} contentFit="contain" transition={150} /> : null}
           </Pressable>
           <Pressable style={styles.close} hitSlop={10} onPress={dismiss}>
@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
   },
   card: { width: '100%', maxWidth: 460, alignItems: 'center' },
-  image: { width: '100%', aspectRatio: 0.8, borderRadius: Radius.lg },
+  imageWrap: { width: '100%', aspectRatio: 0.8 },
+  image: { width: '100%', height: '100%', borderRadius: Radius.lg },
   close: {
     position: 'absolute',
     top: -14,
