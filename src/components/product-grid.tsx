@@ -40,7 +40,11 @@ export function ProductCard({
       entering={FadeInDown.delay(Math.min(index, 8) * 55).springify().damping(18)}
       style={width != null ? { width } : styles.cell}>
       <Pressable
-        style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+        style={({ pressed }) => [
+          styles.card,
+          { backgroundColor: theme.surface, borderColor: theme.border },
+          pressed && styles.cardPressed,
+        ]}
         onPress={() => router.push({ pathname: '/product/[id]', params: { id: product.id } })}>
         <View style={[styles.imageWrap, { backgroundColor: theme.backgroundElement }]}>
           {uri ? (
@@ -53,10 +57,10 @@ export function ProductCard({
           ) : null}
         </View>
         <View style={styles.meta}>
-          <ThemedText type="small" numberOfLines={2} themeColor="textSecondary" style={styles.name}>
+          <ThemedText type="small" numberOfLines={2} style={styles.name}>
             {pick(product.nameEn, product.nameAr)}
           </ThemedText>
-          <View style={styles.priceRow}>
+          <View style={[styles.priceRow, { borderTopColor: theme.border }]}>
             <ThemedText style={styles.price}>
               {product.price.toFixed(3)} <ThemedText style={styles.cur}>{currency}</ThemedText>
             </ThemedText>
@@ -107,13 +111,19 @@ const styles = StyleSheet.create({
   list: { paddingHorizontal: GAP, paddingBottom: TAB_BAR_CLEARANCE, gap: GAP },
   row: { gap: GAP },
   cell: { flex: 1, maxWidth: '50%' },
-  card: { gap: Spacing.two },
-  cardPressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  imageWrap: {
-    aspectRatio: 0.85,
+  card: {
     borderRadius: Radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
+    // soft depth
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
   },
+  cardPressed: { opacity: 0.92, transform: [{ scale: 0.985 }] },
+  imageWrap: { aspectRatio: 1, overflow: 'hidden' },
   image: { width: '100%', height: '100%' },
   saleTag: {
     position: 'absolute',
@@ -125,9 +135,15 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   saleTagText: { fontFamily: AppFonts.bodyBold, fontSize: 10, letterSpacing: 1, color: '#fff' },
-  meta: { gap: 2, paddingHorizontal: 2 },
-  name: { minHeight: 32 },
-  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: Spacing.two },
+  meta: { padding: Spacing.two, gap: Spacing.one },
+  name: { minHeight: 34, lineHeight: 17 },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: Spacing.two,
+    paddingTop: Spacing.one,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
   price: { fontFamily: AppFonts.displayBold, fontSize: 16, color: BRAND.accent },
   cur: { fontFamily: AppFonts.body, fontSize: 11, color: BRAND.accent },
   compare: { textDecorationLine: 'line-through' },
