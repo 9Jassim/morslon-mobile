@@ -9,6 +9,7 @@ import {
 } from "react";
 import { setOnAuthExpired } from "./api";
 import { getAccessToken } from "./auth-storage";
+import { useWishlist } from "./wishlist-store";
 import {
   fetchProfile,
   login as apiLogin,
@@ -59,6 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setOnAuthExpired(() => setCustomer(null));
     return () => setOnAuthExpired(null);
   }, []);
+
+  // Keep the wishlist in sync with auth state.
+  useEffect(() => {
+    if (customer) useWishlist.getState().load();
+    else useWishlist.getState().clear();
+  }, [customer]);
 
   const login = useCallback(async (email: string, password: string) => {
     setCustomer(await apiLogin(email, password));

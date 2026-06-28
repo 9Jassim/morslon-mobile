@@ -19,6 +19,21 @@ export function fetchLoyalty(): Promise<Loyalty> {
 
 /** GET /api/store/wishlist — returns product ids, then hydrates them to products. */
 export async function fetchWishlist(): Promise<Product[]> {
+  const ids = await fetchWishlistIds();
+  return fetchProductsByIds(ids);
+}
+
+/** GET /api/store/wishlist — just the wishlisted product ids. */
+export async function fetchWishlistIds(): Promise<string[]> {
   const res = await api<{ ids: string[] }>("/api/store/wishlist");
-  return fetchProductsByIds(res.ids ?? []);
+  return res.ids ?? [];
+}
+
+/** POST /api/store/wishlist — toggle a product; returns the new membership. */
+export async function toggleWishlist(productId: string): Promise<boolean> {
+  const res = await api<{ ok: boolean; action?: 'added' | 'removed' }>("/api/store/wishlist", {
+    method: "POST",
+    body: { productId },
+  });
+  return res.ok && res.action === 'added';
 }

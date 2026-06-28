@@ -11,7 +11,7 @@ export type CartItem = {
 };
 
 /** Minimal fields the cart needs to add an item (full Product is assignable). */
-export type AddableProduct = Pick<Product, "id" | "nameEn" | "price" | "stock" | "images">;
+export type AddableProduct = Pick<Product, "id" | "nameEn" | "price" | "images"> & { stock?: number };
 
 type CartState = {
   items: CartItem[];
@@ -33,9 +33,10 @@ export const useCart = create<CartState>((set, get) => ({
 
   add: (product, qty = 1) =>
     set((state) => {
+      const cap = product.stock ?? 9999;
       const existing = state.items.find((i) => i.productId === product.id);
       if (existing) {
-        const quantity = Math.min(existing.quantity + qty, product.stock);
+        const quantity = Math.min(existing.quantity + qty, cap);
         return {
           items: state.items.map((i) =>
             i.productId === product.id ? { ...i, quantity } : i,
@@ -50,8 +51,8 @@ export const useCart = create<CartState>((set, get) => ({
             nameEn: product.nameEn,
             price: product.price,
             image: product.images?.[0] ?? null,
-            quantity: Math.min(qty, product.stock),
-            stock: product.stock,
+            quantity: Math.min(qty, cap),
+            stock: cap,
           },
         ],
       };

@@ -16,6 +16,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useCart } from '@/lib/cart-store';
 import { useI18n } from '@/lib/i18n';
 import { BRAND } from '@/lib/theme-colors';
+import { useWishlist } from '@/lib/wishlist-store';
 
 /** Minimal shape of the props expo-router's <Tabs tabBar> passes us. */
 type TabBarProps = {
@@ -47,6 +48,7 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { t } = useI18n();
+  const wishlistCount = useWishlist((s) => s.ids.size);
 
   function onPress(routeKey: string, routeName: string, isFocused: boolean) {
     const event = navigation.emit({ type: 'tabPress', target: routeKey, canPreventDefault: true });
@@ -74,6 +76,7 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
               icons={ICONS[route.name] ?? ['ellipse-outline', 'ellipse']}
               focused={isFocused}
               inactiveColor={theme.textSecondary}
+              badge={route.name === 'wishlist' ? wishlistCount : 0}
               onPress={() => onPress(route.key, route.name, isFocused)}
             />
           );
@@ -88,12 +91,14 @@ function TabItem({
   icons,
   focused,
   inactiveColor,
+  badge = 0,
   onPress,
 }: {
   label: string;
   icons: [IconName, IconName];
   focused: boolean;
   inactiveColor: string;
+  badge?: number;
   onPress: () => void;
 }) {
   const active = useSharedValue(focused ? 1 : 0);
@@ -110,7 +115,14 @@ function TabItem({
   return (
     <Pressable style={styles.item} onPress={onPress} hitSlop={6}>
       <Animated.View style={[styles.indicator, lineStyle]} />
-      <Ionicons name={icons[focused ? 1 : 0]} size={22} color={focused ? BRAND.accent : inactiveColor} />
+      <View>
+        <Ionicons name={icons[focused ? 1 : 0]} size={22} color={focused ? BRAND.accent : inactiveColor} />
+        {badge > 0 ? (
+          <View style={styles.itemBadge} pointerEvents="none">
+            <ThemedText style={styles.itemBadgeText}>{badge > 99 ? '99+' : badge}</ThemedText>
+          </View>
+        ) : null}
+      </View>
       <ThemedText
         style={[styles.label, { color: focused ? BRAND.accent : inactiveColor }]}
         numberOfLines={1}>
@@ -227,4 +239,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   badgeText: { fontFamily: AppFonts.bodyBold, fontSize: 10, color: '#fff' },
+  itemBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -10,
+    minWidth: 16,
+    height: 16,
+    paddingHorizontal: 4,
+    borderRadius: 8,
+    backgroundColor: '#E8543B',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  itemBadgeText: { fontFamily: AppFonts.bodyBold, fontSize: 9, color: '#fff' },
 });
