@@ -11,6 +11,7 @@ import {
   type Slide,
 } from '@/components/home-blocks';
 import { HighlightsBar } from '@/components/highlights-bar';
+import { PopupBanner } from '@/components/popup-banner';
 import { PopupModal } from '@/components/popup-modal';
 import { ThemedText } from '@/components/themed-text';
 import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
@@ -126,6 +127,7 @@ export default function HomeScreen() {
         ) : null}
       </ScrollView>
 
+      <PopupBanner banner={data?.popupBanner ?? null} />
       <PopupModal popups={popups} />
     </Screen>
   );

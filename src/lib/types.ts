@@ -115,6 +115,15 @@ export type HomePopup = {
   dismissable: boolean;
 };
 
+/** Image promo popup (admin "Popups"), distinct from the text PopupMessage. */
+export type HomePopupBanner = {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  image: string;
+  link: string | null;
+};
+
 /** Minimal product shape used in home rails. */
 export type HomeProduct = Pick<
   Product,
@@ -151,6 +160,7 @@ export type HomeData = {
   categorySections: HomeCategorySection[];
   highlights: HomeHighlight[];
   popups: HomePopup[];
+  popupBanner: HomePopupBanner | null;
   sections: HomeSection[];
 };
 
