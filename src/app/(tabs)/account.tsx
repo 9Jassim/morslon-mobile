@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     paddingVertical: Spacing.three,
   },
-  rowLabel: { fontFamily: AppFonts.body, fontSize: 15 },
-  rowValue: { fontSize: 15, marginStart: 'auto' },
-  chevron: { marginStart: 'auto' },
+  rowLabel: { fontFamily: AppFonts.body, fontSize: 15, flex: 1 },
+  rowValue: { fontSize: 15 },
+  chevron: {},
   logout: { marginTop: Spacing.two },
 });
