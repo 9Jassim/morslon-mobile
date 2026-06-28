@@ -1,6 +1,6 @@
 import { api } from "./api";
 import { setBrandFromConfig } from "./theme-colors";
-import type { AppConfig, Category, HomeData, Product, ProductsResponse } from "./types";
+import type { AppConfig, Category, HomeData, Product, ProductsResponse, StorePagesData } from "./types";
 
 /** GET /api/mobile/config — public app bootstrap payload. */
 export async function fetchConfig(): Promise<AppConfig> {
@@ -17,6 +17,11 @@ export function fetchHome(): Promise<HomeData> {
 /** GET /api/categories — nested category tree (public). */
 export function fetchCategories(): Promise<Category[]> {
   return api<Category[]>("/api/categories", { auth: false });
+}
+
+/** GET /api/mobile/pages — store info pages + contact details (public). */
+export function fetchStorePages(): Promise<StorePagesData> {
+  return api<StorePagesData>("/api/mobile/pages", { auth: false });
 }
 
 /** GET /api/products?ids= — fetch one product by id (public). */

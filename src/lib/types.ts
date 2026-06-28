@@ -222,3 +222,51 @@ export type Loyalty = {
   programActive?: boolean;
   rewards: LoyaltyReward[];
 };
+
+/** GET /api/mobile/pages — store info pages for Account → Store. */
+export type StorePage = {
+  slug: string; // "about" | "terms" | "privacy"
+  titleEn: string;
+  titleAr: string;
+  bodyEn: string;
+  bodyAr: string;
+  updatedAt: string | null;
+};
+
+export type StoreBranch = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  addressEn: string;
+  addressAr: string;
+  phone: string | null;
+  whatsapp: string | null;
+  workingHoursEn: string | null;
+  workingHoursAr: string | null;
+  mapEmbed: string | null;
+};
+
+export type StoreContact = {
+  phone: string;
+  whatsapp: string;
+  email: string;
+  addressEn: string;
+  addressAr: string;
+  workingHoursEn: string;
+  workingHoursAr: string;
+  mapEmbed: string | null;
+  social: {
+    instagram: string;
+    twitter: string;
+    facebook: string;
+    tiktok: string;
+    youtube: string;
+    snapchat: string;
+  };
+  branches: StoreBranch[];
+};
+
+export type StorePagesData = {
+  pages: StorePage[];
+  contact: StoreContact;
+};
