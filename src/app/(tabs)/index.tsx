@@ -5,9 +5,11 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import {
   BannerCarousel,
   CategoryStrip,
+  FlashSaleSection,
   FullBanner,
   PosterGrid,
   ProductRail,
+  PromotionsRow,
   type Slide,
 } from '@/components/home-blocks';
 import { HighlightsBar } from '@/components/highlights-bar';
@@ -70,6 +72,8 @@ export default function HomeScreen() {
   const highlights = data?.highlights ?? [];
   const sections = data?.sections ?? [];
   const popups = data?.popups ?? [];
+  const flashSale = data?.flashSale ?? null;
+  const promotions = data?.promotions ?? [];
 
   const empty =
     hero.length === 0 && sections.length === 0 && categories.length === 0 &&
@@ -86,6 +90,12 @@ export default function HomeScreen() {
         {promo.length > 0 ? (
           <PosterGrid items={promo.map((b) => ({ image: b.image, link: b.link ?? undefined }))} />
         ) : null}
+
+        {/* Flash sale */}
+        {flashSale ? <FlashSaleSection flashSale={flashSale} /> : null}
+
+        {/* Promotions (show-on-home) */}
+        <PromotionsRow promotions={promotions} />
 
         {/* Custom home sections */}
         {sections.map((section) => {

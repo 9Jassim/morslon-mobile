@@ -150,6 +150,38 @@ export type HomeCategorySection = {
   products: HomeProduct[];
 };
 
+/** Active flash sale (Offer) with its discounted products + end time. */
+export type HomeFlashSale = {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  endAt: string;
+  products: HomeProduct[];
+};
+
+/** A promotion flagged to show on home. */
+export type HomePromotion = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  slug: string | null;
+  image: string | null;
+};
+
+/** GET /api/promotions/:id — promotion detail with its products. */
+export type PromotionDetail = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  descEn: string | null;
+  descAr: string | null;
+  image: string | null;
+  type: string;
+  startAt: string;
+  endAt: string;
+  products: { id: string; nameEn: string; nameAr: string; slug: string; price: number; comparePrice: number | null; images: string[]; category: string }[];
+};
+
 export type HomeData = {
   hero: HomeBanner[];
   promo: HomeBanner[];
@@ -161,6 +193,8 @@ export type HomeData = {
   highlights: HomeHighlight[];
   popups: HomePopup[];
   popupBanner: HomePopupBanner | null;
+  flashSale: HomeFlashSale | null;
+  promotions: HomePromotion[];
   sections: HomeSection[];
 };
 

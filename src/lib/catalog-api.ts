@@ -1,6 +1,6 @@
 import { api } from "./api";
 import { setBrandFromConfig } from "./theme-colors";
-import type { AppConfig, Category, HomeData, Product, ProductsResponse, StorePagesData } from "./types";
+import type { AppConfig, Category, HomeData, Product, ProductsResponse, PromotionDetail, StorePagesData } from "./types";
 
 /** GET /api/mobile/config — public app bootstrap payload. */
 export async function fetchConfig(): Promise<AppConfig> {
@@ -22,6 +22,11 @@ export function fetchCategories(): Promise<Category[]> {
 /** GET /api/mobile/pages — store info pages + contact details (public). */
 export function fetchStorePages(): Promise<StorePagesData> {
   return api<StorePagesData>("/api/mobile/pages", { auth: false });
+}
+
+/** GET /api/promotions/:id — promotion detail + products (public). */
+export function fetchPromotion(id: string): Promise<PromotionDetail> {
+  return api<PromotionDetail>(`/api/promotions/${encodeURIComponent(id)}`, { auth: false });
 }
 
 /** GET /api/products?ids= — fetch one product by id (public). */

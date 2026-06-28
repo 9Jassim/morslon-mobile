@@ -28,6 +28,9 @@ const MESSAGES = {
     'home.discover': 'DISCOVER',
     'home.highlighted': 'Highlighted Products',
     'home.discoverMore': 'Discover More',
+    'home.flashSale': 'Flash Sale',
+    'home.endsIn': 'Ends in',
+    'home.promotions': 'Promotions',
     'home.empty': 'Nothing here yet',
     'home.failed': 'Couldn’t load the home page.',
 
@@ -148,6 +151,9 @@ const MESSAGES = {
     'home.discover': 'اكتشف',
     'home.highlighted': 'منتجات بارزة',
     'home.discoverMore': 'اكتشف المزيد',
+    'home.flashSale': 'تخفيضات سريعة',
+    'home.endsIn': 'ينتهي خلال',
+    'home.promotions': 'العروض',
     'home.empty': 'لا يوجد شيء بعد',
     'home.failed': 'تعذّر تحميل الصفحة الرئيسية.',
 

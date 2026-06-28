@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { createElement, useEffect, useRef, useState } from 'react';
@@ -18,7 +19,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
-import type { HomeCategory, HomeProduct } from '@/lib/types';
+import type { HomeCategory, HomeFlashSale, HomeProduct, HomePromotion } from '@/lib/types';
 
 const SCREEN = Dimensions.get('window').width;
 const PAD = Spacing.three;
@@ -312,6 +313,96 @@ export function PosterGrid({ title, items }: { title?: string; items: { image?: 
   );
 }
 
+/* ── Flash sale: countdown + product rail ─────────────────────────── */
+function useCountdown(endAt: string): string {
+  const [label, setLabel] = useState('');
+  useEffect(() => {
+    const tick = () => {
+      const ms = new Date(endAt).getTime() - Date.now();
+      if (ms <= 0) {
+        setLabel('00:00:00');
+        return;
+      }
+      const s = Math.floor(ms / 1000);
+      const d = Math.floor(s / 86400);
+      const h = String(Math.floor((s % 86400) / 3600)).padStart(2, '0');
+      const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      const sec = String(s % 60).padStart(2, '0');
+      setLabel(d > 0 ? `${d}d ${h}:${m}:${sec}` : `${h}:${m}:${sec}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [endAt]);
+  return label;
+}
+
+export function FlashSaleSection({ flashSale }: { flashSale: HomeFlashSale }) {
+  const { t, pick } = useI18n();
+  const countdown = useCountdown(flashSale.endAt);
+  if (flashSale.products.length === 0) return null;
+
+  return (
+    <View style={styles.flashWrap}>
+      <View style={styles.flashHead}>
+        <View style={styles.flashTitleRow}>
+          <Ionicons name="flash" size={20} color="#fff" />
+          <ThemedText style={styles.flashTitle}>{pick(t('home.flashSale'), flashSale.titleAr)}</ThemedText>
+        </View>
+        <View style={styles.flashTimer}>
+          <Ionicons name="time-outline" size={14} color="#fff" />
+          <ThemedText style={styles.flashTimerText}>{countdown}</ThemedText>
+        </View>
+      </View>
+      <FlatList
+        data={flashSale.products}
+        keyExtractor={(p) => p.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={RAIL_CARD_W + ITEM_GAP}
+        decelerationRate="fast"
+        contentContainerStyle={styles.railList}
+        renderItem={({ item, index }) => <ProductCard product={item} index={index} width={RAIL_CARD_W} />}
+      />
+    </View>
+  );
+}
+
+/* ── Promotions row (cards → promotion detail) ────────────────────── */
+export function PromotionsRow({ promotions }: { promotions: HomePromotion[] }) {
+  const router = useRouter();
+  const { t, pick } = useI18n();
+  if (promotions.length === 0) return null;
+
+  return (
+    <View style={styles.section}>
+      <SectionTitle>{t('home.promotions')}</SectionTitle>
+      <FlatList
+        data={promotions}
+        keyExtractor={(p) => p.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.railList}
+        renderItem={({ item }) => {
+          const uri = resolveProductImage(item.image);
+          return (
+            <Pressable
+              style={styles.promoCard}
+              onPress={() => router.push({ pathname: '/promotion/[id]', params: { id: item.id } })}>
+              <View style={styles.promoImageWrap}>
+                {uri ? <Image source={{ uri }} style={styles.fill} contentFit="cover" transition={150} /> : null}
+              </View>
+              <ThemedText type="small" numberOfLines={2} style={styles.promoName}>
+                {pick(item.nameEn, item.nameAr)}
+              </ThemedText>
+            </Pressable>
+          );
+        }}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   fill: { width: '100%', height: '100%' },
   section: { gap: Spacing.three, marginTop: Spacing.five },
@@ -346,6 +437,17 @@ const styles = StyleSheet.create({
   chipLabel: { textAlign: 'center' },
 
   railList: { paddingHorizontal: PAD, gap: ITEM_GAP },
+
+  flashWrap: { marginTop: Spacing.five, paddingVertical: Spacing.three, backgroundColor: '#E8543B', gap: Spacing.three },
+  flashHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: PAD },
+  flashTitleRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
+  flashTitle: { fontFamily: AppFonts.displayBold, fontSize: 20, color: '#fff' },
+  flashTimer: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one, backgroundColor: 'rgba(0,0,0,0.25)', borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
+  flashTimerText: { fontFamily: AppFonts.bodyBold, fontSize: 13, color: '#fff' },
+
+  promoCard: { width: 150, gap: Spacing.one },
+  promoImageWrap: { width: 150, aspectRatio: 1.2, borderRadius: Radius.md, overflow: 'hidden', backgroundColor: '#0001' },
+  promoName: { minHeight: 32 },
 
   posterWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two, paddingHorizontal: PAD },
   poster: { width: (CONTENT_W - Spacing.two) / 2, aspectRatio: 1, borderRadius: Radius.md, overflow: 'hidden', backgroundColor: '#0001' },

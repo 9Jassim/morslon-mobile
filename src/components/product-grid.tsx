@@ -79,12 +79,12 @@ export function ProductGrid({
   header,
   onEndReached,
 }: {
-  products: Product[];
+  products: CardProduct[];
   currency?: string;
   header?: React.ReactElement;
   onEndReached?: () => void;
 }) {
-  const renderItem: ListRenderItem<Product> = ({ item, index }) => (
+  const renderItem: ListRenderItem<CardProduct> = ({ item, index }) => (
     <ProductCard product={item} currency={currency} index={index} />
   );
   return (
