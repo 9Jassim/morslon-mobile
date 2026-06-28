@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { createElement, useEffect, useRef, useState } from 'react';
+import { Dimensions, FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -138,39 +138,46 @@ export function BannerCarousel({ title, slides }: { title?: string; slides: Slid
 
   if (slides.length === 0) return null;
 
+  const list = (
+    <AnimatedFlatList
+      ref={listRef as never}
+      data={loop}
+      keyExtractor={(_, i) => String(i)}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      snapToInterval={SNAP}
+      decelerationRate="fast"
+      onScroll={onScroll}
+      scrollEventThrottle={16}
+      // Pin the list to LTR so the centering/auto-rotation math (positive
+      // offsets) works under RTL. `direction` style is native-only; web uses
+      // the <div dir="ltr"> wrapper below.
+      style={Platform.OS === 'web' ? undefined : { direction: 'ltr' }}
+      contentContainerStyle={{ paddingHorizontal: SIDE_PAD }}
+      getItemLayout={(_, i) => ({ length: SNAP, offset: SNAP * i, index: i })}
+      onTouchStart={() => (pausedRef.current = true)}
+      onScrollBeginDrag={() => (pausedRef.current = true)}
+      onMomentumScrollEnd={(e) => {
+        const idx = Math.round(e.nativeEvent.contentOffset.x / SNAP);
+        indexRef.current = idx;
+        setActive(((idx % slides.length) + slides.length) % slides.length);
+        if (many && (idx < slides.length || idx >= slides.length * 2)) {
+          const norm = (idx % slides.length) + slides.length;
+          indexRef.current = norm;
+          listRef.current?.scrollToOffset({ offset: norm * SNAP, animated: false });
+        }
+        pausedRef.current = false;
+      }}
+      renderItem={({ item, index }) => (
+        <CarouselCard slide={item as Slide} index={index} scrollX={scrollX} onPress={() => onLink((item as Slide).link)} />
+      )}
+    />
+  );
+
   return (
     <View style={title ? styles.section : styles.spotWrap}>
       {title ? <SectionTitle>{title}</SectionTitle> : null}
-      <AnimatedFlatList
-        ref={listRef as never}
-        data={loop}
-        keyExtractor={(_, i) => String(i)}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={SNAP}
-        decelerationRate="fast"
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        style={styles.ltr}
-        contentContainerStyle={{ paddingHorizontal: SIDE_PAD }}
-        getItemLayout={(_, i) => ({ length: SNAP, offset: SNAP * i, index: i })}
-        onTouchStart={() => (pausedRef.current = true)}
-        onScrollBeginDrag={() => (pausedRef.current = true)}
-        onMomentumScrollEnd={(e) => {
-          const idx = Math.round(e.nativeEvent.contentOffset.x / SNAP);
-          indexRef.current = idx;
-          setActive(((idx % slides.length) + slides.length) % slides.length);
-          if (many && (idx < slides.length || idx >= slides.length * 2)) {
-            const norm = (idx % slides.length) + slides.length;
-            indexRef.current = norm;
-            listRef.current?.scrollToOffset({ offset: norm * SNAP, animated: false });
-          }
-          pausedRef.current = false;
-        }}
-        renderItem={({ item, index }) => (
-          <CarouselCard slide={item as Slide} index={index} scrollX={scrollX} onPress={() => onLink((item as Slide).link)} />
-        )}
-      />
+      {Platform.OS === 'web' ? createElement('div', { dir: 'ltr' }, list) : list}
       {many ? (
         <View style={styles.dots}>
           {slides.map((s, i) => (
@@ -307,7 +314,6 @@ export function PosterGrid({ title, items }: { title?: string; items: { image?: 
 
 const styles = StyleSheet.create({
   fill: { width: '100%', height: '100%' },
-  ltr: { direction: 'ltr' },
   section: { gap: Spacing.three, marginTop: Spacing.five },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingHorizontal: PAD },
   titleInner: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
