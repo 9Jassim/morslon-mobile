@@ -14,6 +14,8 @@ import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { AppHeader } from '@/components/app-header';
+import { BottomBar } from '@/components/tab-bar';
 import { AppFonts, Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider } from '@/lib/auth-context';
@@ -72,12 +74,14 @@ export default function RootLayout() {
           <AnimatedSplashOverlay />
           <Stack
             screenOptions={{
-              headerShown: false,
-              headerTitleStyle: { fontFamily: AppFonts.display },
+              // Pushed screens get the app header with a back button; the (tabs)
+              // group renders its own header.
+              header: () => <AppHeader showBack />,
               contentStyle: { backgroundColor: Colors[colorScheme].background },
             }}>
-            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
+          <BottomBar />
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>

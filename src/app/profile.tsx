@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AuthRequired } from '@/components/auth-required';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -210,7 +211,7 @@ function PasswordCard({ theme, t }: { theme: Theme; t: T }) {
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
-  content: { padding: Spacing.four, gap: Spacing.four, paddingBottom: Spacing.six },
+  content: { padding: Spacing.four, gap: Spacing.four, paddingBottom: TAB_BAR_CLEARANCE },
   card: {
     borderRadius: Radius.md,
     borderWidth: StyleSheet.hairlineWidth,

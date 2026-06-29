@@ -7,14 +7,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
+import { useI18n } from '@/lib/i18n';
 import { API_URL } from '@/lib/api';
 import { fetchConfig } from '@/lib/catalog-api';
 
-/** Top bar shown on the main tabs: store logo + search + notifications. */
-export function AppHeader() {
+/** Top bar: store logo + search + notifications. Shows a back button on pushed screens. */
+export function AppHeader({ showBack = false }: { showBack?: boolean }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const { isRTL } = useI18n();
   const { data } = useQuery({ queryKey: ['config'], queryFn: fetchConfig });
 
   const logoUrl = data?.store.logoUrl
@@ -30,6 +32,15 @@ export function AppHeader() {
         { paddingTop: insets.top + 8, backgroundColor: theme.background, borderBottomColor: theme.backgroundElement },
       ]}>
       <View style={styles.logoWrap}>
+        {showBack ? (
+          <TouchableOpacity
+            accessibilityLabel="Back"
+            hitSlop={8}
+            style={[styles.backBtn, { backgroundColor: theme.backgroundElement }]}
+            onPress={() => (router.canGoBack() ? router.back() : router.navigate('/'))}>
+            <Ionicons name={isRTL ? 'chevron-forward' : 'chevron-back'} size={22} color={theme.text} />
+          </TouchableOpacity>
+        ) : null}
         {logoUrl ? (
           <Image source={{ uri: logoUrl }} style={styles.logo} contentFit="contain" />
         ) : (
@@ -68,8 +79,15 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  logoWrap: { flex: 1 },
-  logo: { width: 120, height: 34, alignSelf: 'flex-start' },
+  logoWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  backBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: { width: 120, height: 34 },
   logoText: { fontSize: 24, letterSpacing: -0.5 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   iconBtn: {

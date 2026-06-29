@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { usePathname, useRouter, type Href } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
@@ -18,66 +19,61 @@ import { useI18n } from '@/lib/i18n';
 import { BRAND } from '@/lib/theme-colors';
 import { useWishlist } from '@/lib/wishlist-store';
 
-/** Minimal shape of the props expo-router's <Tabs tabBar> passes us. */
-type TabBarProps = {
-  state: { index: number; routes: { key: string; name: string }[] };
-  descriptors: Record<string, { options: { title?: string } }>;
-  navigation: {
-    navigate: (name: string) => void;
-    emit: (e: { type: 'tabPress'; target?: string; canPreventDefault: true }) => { defaultPrevented: boolean };
-  };
-};
-
 type IconName = keyof typeof Ionicons.glyphMap;
-const ICONS: Record<string, [IconName, IconName]> = {
-  // [inactive, active]
-  index: ['home-outline', 'home'],
-  categories: ['grid-outline', 'grid'],
-  wishlist: ['heart-outline', 'heart'],
-  account: ['person-outline', 'person'],
+
+type TabDef = {
+  key: 'home' | 'categories' | 'cart' | 'wishlist' | 'account';
+  href: Href;
+  icons?: [IconName, IconName];
+  label?: 'tabs.home' | 'tabs.categories' | 'tabs.wishlist' | 'tabs.account';
+  fab?: boolean;
+  badge?: 'wishlist';
+  /** Path prefixes that should keep this tab highlighted. */
+  match: (p: string) => boolean;
 };
 
-const TAB_LABEL: Record<string, 'tabs.home' | 'tabs.categories' | 'tabs.wishlist' | 'tabs.account'> = {
-  index: 'tabs.home',
-  categories: 'tabs.categories',
-  wishlist: 'tabs.wishlist',
-  account: 'tabs.account',
-};
+const TABS: TabDef[] = [
+  { key: 'home', href: '/', icons: ['home-outline', 'home'], label: 'tabs.home', match: (p) => p === '/' },
+  { key: 'categories', href: '/categories', icons: ['grid-outline', 'grid'], label: 'tabs.categories', match: (p) => p.startsWith('/categories') || p.startsWith('/category') },
+  { key: 'cart', href: '/cart', fab: true, match: (p) => p.startsWith('/cart') },
+  { key: 'wishlist', href: '/wishlist', icons: ['heart-outline', 'heart'], label: 'tabs.wishlist', badge: 'wishlist', match: (p) => p.startsWith('/wishlist') },
+  {
+    key: 'account',
+    href: '/account',
+    icons: ['person-outline', 'person'],
+    label: 'tabs.account',
+    match: (p) => ['/account', '/profile', '/orders', '/wallet', '/loyalty', '/pages'].some((r) => p.startsWith(r)),
+  },
+];
 
-export function TabBar({ state, descriptors, navigation }: TabBarProps) {
+/** Global floating bottom bar — rendered once at the root so it shows on every screen. */
+export function BottomBar() {
   const theme = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
   const insets = useSafeAreaInsets();
   const { t } = useI18n();
   const wishlistCount = useWishlist((s) => s.ids.size);
 
-  function onPress(routeKey: string, routeName: string, isFocused: boolean) {
-    const event = navigation.emit({ type: 'tabPress', target: routeKey, canPreventDefault: true });
-    if (!isFocused && !event.defaultPrevented) navigation.navigate(routeName);
-  }
+  // Hide on focused buying flows that have their own bottom CTA.
+  if (pathname.startsWith('/product')) return null;
 
   return (
     <View pointerEvents="box-none" style={[styles.wrap, { paddingBottom: insets.bottom + 10 }]}>
       <View style={[styles.bar, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        {state.routes.map((route, index) => {
-          const isFocused = state.index === index;
-          const labelKey = TAB_LABEL[route.name];
-          const label = labelKey ? t(labelKey) : (descriptors[route.key]?.options.title ?? route.name);
-
-          if (route.name === 'cart') {
-            return (
-              <CartFab key={route.key} onPress={() => onPress(route.key, route.name, isFocused)} />
-            );
-          }
-
+        {TABS.map((tab) => {
+          const focused = tab.match(pathname);
+          const go = () => router.navigate(tab.href);
+          if (tab.fab) return <CartFab key={tab.key} onPress={go} />;
           return (
             <TabItem
-              key={route.key}
-              label={label}
-              icons={ICONS[route.name] ?? ['ellipse-outline', 'ellipse']}
-              focused={isFocused}
+              key={tab.key}
+              label={t(tab.label!)}
+              icons={tab.icons!}
+              focused={focused}
               inactiveColor={theme.textSecondary}
-              badge={route.name === 'wishlist' ? wishlistCount : 0}
-              onPress={() => onPress(route.key, route.name, isFocused)}
+              badge={tab.badge === 'wishlist' ? wishlistCount : 0}
+              onPress={go}
             />
           );
         })}

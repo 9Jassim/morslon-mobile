@@ -4,6 +4,7 @@ import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View } from 
 
 import { AuthRequired } from '@/components/auth-required';
 import { StatusBadge } from '@/components/status-badge';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
@@ -76,7 +77,7 @@ function OrderRow({ order, onPress }: { order: Order; onPress: () => void }) {
 }
 
 const styles = StyleSheet.create({
-  list: { padding: Spacing.three, gap: Spacing.two },
+  list: { padding: Spacing.three, paddingBottom: TAB_BAR_CLEARANCE, gap: Spacing.two },
   row: {
     padding: Spacing.three,
     borderRadius: Radius.md,

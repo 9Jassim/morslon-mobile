@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
 import { AuthRequired } from '@/components/auth-required';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { AppFonts, Radius, Spacing } from '@/constants/theme';
@@ -75,7 +76,7 @@ export default function LoyaltyScreen() {
 }
 
 const styles = StyleSheet.create({
-  list: { padding: Spacing.three, gap: Spacing.two },
+  list: { padding: Spacing.three, paddingBottom: TAB_BAR_CLEARANCE, gap: Spacing.two },
   balanceCard: {
     backgroundColor: '#1a7f37',
     borderRadius: Radius.lg,

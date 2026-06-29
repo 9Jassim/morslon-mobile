@@ -3,6 +3,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import { StatusBadge } from '@/components/status-badge';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { Spacing } from '@/constants/theme';
@@ -88,7 +89,7 @@ function SummaryRow({ label, value, bold }: { label: string; value: number; bold
 }
 
 const styles = StyleSheet.create({
-  scroll: { padding: Spacing.four, gap: Spacing.four },
+  scroll: { padding: Spacing.four, paddingBottom: TAB_BAR_CLEARANCE, gap: Spacing.four },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   date: { opacity: 0.6 },
   section: { gap: Spacing.two },

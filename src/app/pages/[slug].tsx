@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Markdown } from '@/components/markdown';
+import { TAB_BAR_CLEARANCE } from '@/components/tab-bar';
 import { ThemedText } from '@/components/themed-text';
 import { Screen } from '@/components/ui/screen';
 import { Radius, Spacing } from '@/constants/theme';
@@ -228,7 +229,7 @@ function BranchCard({ branch }: { branch: StoreBranch }) {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: Spacing.four, gap: Spacing.three, paddingBottom: Spacing.six },
+  content: { padding: Spacing.four, gap: Spacing.three, paddingBottom: TAB_BAR_CLEARANCE },
   card: { borderRadius: Radius.md, borderWidth: StyleSheet.hairlineWidth, paddingHorizontal: Spacing.three },
   row: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, paddingVertical: Spacing.three },
   iconWrap: { width: 36, height: 36, borderRadius: Radius.sm, alignItems: 'center', justifyContent: 'center' },
