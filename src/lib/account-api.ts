@@ -7,6 +7,16 @@ export function fetchOrders(): Promise<Order[]> {
   return api<Order[]>("/api/orders");
 }
 
+/** PUT /api/account/profile — update name + phone. */
+export function updateProfile(input: { firstName: string; lastName: string; phone: string }): Promise<{ success: boolean }> {
+  return api<{ success: boolean }>("/api/account/profile", { method: "PUT", body: input });
+}
+
+/** PUT /api/account/password — change password. */
+export function changePassword(input: { currentPassword: string; newPassword: string }): Promise<{ success: boolean }> {
+  return api<{ success: boolean }>("/api/account/password", { method: "PUT", body: input });
+}
+
 /** GET /api/store/wallet — balance + transactions (auth required). */
 export function fetchWallet(): Promise<Wallet> {
   return api<Wallet>("/api/store/wallet");

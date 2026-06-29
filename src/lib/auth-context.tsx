@@ -25,6 +25,7 @@ type AuthState = {
   login: (email: string, password: string) => Promise<void>;
   register: (input: Parameters<typeof apiRegister>[0]) => Promise<void>;
   logout: () => Promise<void>;
+  updateCustomer: (partial: Partial<Customer>) => void;
 };
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -80,9 +81,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCustomer(null);
   }, []);
 
+  const updateCustomer = useCallback((partial: Partial<Customer>) => {
+    setCustomer((c) => (c ? { ...c, ...partial } : c));
+  }, []);
+
   const value = useMemo<AuthState>(
-    () => ({ loading, customer, login, register, logout }),
-    [loading, customer, login, register, logout],
+    () => ({ loading, customer, login, register, logout, updateCustomer }),
+    [loading, customer, login, register, logout, updateCustomer],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
