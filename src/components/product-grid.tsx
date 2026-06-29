@@ -183,7 +183,7 @@ export function ProductGrid({
 }
 
 const styles = StyleSheet.create({
-  list: { paddingHorizontal: GAP, paddingBottom: TAB_BAR_CLEARANCE, gap: GAP },
+  list: { paddingHorizontal: GAP, paddingTop: GAP, paddingBottom: TAB_BAR_CLEARANCE, gap: GAP },
   row: { gap: GAP },
   cell: { flex: 1, maxWidth: '50%' },
   card: {
