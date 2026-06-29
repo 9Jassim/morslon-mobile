@@ -47,12 +47,14 @@ export function fetchProducts(params: {
   limit?: number;
   category?: string;
   search?: string;
+  brands?: string;
 } = {}): Promise<ProductsResponse> {
   const qs = new URLSearchParams();
   if (params.page) qs.set("page", String(params.page));
   if (params.limit) qs.set("limit", String(params.limit));
   if (params.category) qs.set("category", params.category);
   if (params.search) qs.set("search", params.search);
+  if (params.brands) qs.set("brands", params.brands);
   const suffix = qs.toString() ? `?${qs}` : "";
   return api<ProductsResponse>(`/api/store/products${suffix}`, { auth: false });
 }

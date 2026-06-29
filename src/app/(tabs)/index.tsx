@@ -4,6 +4,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
   BannerCarousel,
+  BrandStrip,
   CategoryStrip,
   FlashSaleSection,
   FullBanner,
@@ -74,6 +75,7 @@ export default function HomeScreen() {
   const popups = data?.popups ?? [];
   const flashSale = data?.flashSale ?? null;
   const promotions = data?.promotions ?? [];
+  const brands = data?.brands ?? [];
 
   const empty =
     hero.length === 0 && sections.length === 0 && categories.length === 0 &&
@@ -128,6 +130,9 @@ export default function HomeScreen() {
         {discover.length > 0 ? (
           <PosterGrid title={t('home.discoverMore')} items={discover.map((b) => ({ image: b.image, link: b.link ?? undefined }))} />
         ) : null}
+
+        {/* Shop by brand */}
+        <BrandStrip brands={brands} />
 
         {empty ? (
           <View style={styles.empty}>

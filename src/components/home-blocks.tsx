@@ -19,7 +19,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { useI18n } from '@/lib/i18n';
 import { resolveProductImage } from '@/lib/images';
 import { BRAND } from '@/lib/theme-colors';
-import type { HomeCategory, HomeFlashSale, HomeProduct, HomePromotion } from '@/lib/types';
+import type { HomeBrand, HomeCategory, HomeFlashSale, HomeProduct, HomePromotion } from '@/lib/types';
 
 const SCREEN = Dimensions.get('window').width;
 const PAD = Spacing.three;
@@ -403,6 +403,44 @@ export function PromotionsRow({ promotions }: { promotions: HomePromotion[] }) {
   );
 }
 
+/* ── Brands strip ─────────────────────────────────────────────────── */
+export function BrandStrip({ brands }: { brands: HomeBrand[] }) {
+  const router = useRouter();
+  const theme = useTheme();
+  const { t, pick } = useI18n();
+  if (brands.length === 0) return null;
+
+  return (
+    <View style={styles.section}>
+      <SectionTitle>{t('home.brands')}</SectionTitle>
+      <FlatList
+        data={brands}
+        keyExtractor={(b) => b.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.railList}
+        renderItem={({ item }) => {
+          const uri = resolveProductImage(item.logo);
+          return (
+            <Pressable
+              style={[styles.brandCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => router.push({ pathname: '/brand/[slug]', params: { slug: item.slug } })}>
+              {uri ? (
+                <Image source={{ uri }} style={styles.brandLogo} contentFit="contain" transition={150} />
+              ) : (
+                <ThemedText style={styles.brandInitial}>{item.nameEn.charAt(0)}</ThemedText>
+              )}
+              <ThemedText type="small" numberOfLines={1} style={styles.brandName}>
+                {pick(item.nameEn, item.nameAr)}
+              </ThemedText>
+            </Pressable>
+          );
+        }}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   fill: { width: '100%', height: '100%' },
   section: { gap: Spacing.three, marginTop: Spacing.five },
@@ -448,6 +486,20 @@ const styles = StyleSheet.create({
   promoCard: { width: 150, gap: Spacing.one },
   promoImageWrap: { width: 150, aspectRatio: 1.2, borderRadius: Radius.md, overflow: 'hidden', backgroundColor: '#0001' },
   promoName: { minHeight: 32 },
+
+  brandCard: {
+    width: 110,
+    height: 84,
+    borderRadius: Radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.one,
+    paddingHorizontal: Spacing.two,
+  },
+  brandLogo: { width: 72, height: 36 },
+  brandInitial: { fontFamily: AppFonts.displayBold, fontSize: 24, color: BRAND.accent },
+  brandName: { textAlign: 'center' },
 
   posterWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two, paddingHorizontal: PAD },
   poster: { width: (CONTENT_W - Spacing.two) / 2, aspectRatio: 1, borderRadius: Radius.md, overflow: 'hidden', backgroundColor: '#0001' },

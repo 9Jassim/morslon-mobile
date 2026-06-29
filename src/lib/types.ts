@@ -182,6 +182,14 @@ export type PromotionDetail = {
   products: { id: string; nameEn: string; nameAr: string; slug: string; price: number; comparePrice: number | null; images: string[]; category: string }[];
 };
 
+export type HomeBrand = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  slug: string;
+  logo: string | null;
+};
+
 export type HomeData = {
   hero: HomeBanner[];
   promo: HomeBanner[];
@@ -195,6 +203,7 @@ export type HomeData = {
   popupBanner: HomePopupBanner | null;
   flashSale: HomeFlashSale | null;
   promotions: HomePromotion[];
+  brands: HomeBrand[];
   sections: HomeSection[];
 };
 

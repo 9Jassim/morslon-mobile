@@ -31,6 +31,7 @@ const MESSAGES = {
     'home.flashSale': 'Flash Sale',
     'home.endsIn': 'Ends in',
     'home.promotions': 'Promotions',
+    'home.brands': 'Shop by Brand',
     'home.empty': 'Nothing here yet',
     'home.failed': 'Couldn’t load the home page.',
 
@@ -166,6 +167,7 @@ const MESSAGES = {
     'home.flashSale': 'تخفيضات سريعة',
     'home.endsIn': 'ينتهي خلال',
     'home.promotions': 'العروض',
+    'home.brands': 'تسوّق حسب العلامة',
     'home.empty': 'لا يوجد شيء بعد',
     'home.failed': 'تعذّر تحميل الصفحة الرئيسية.',
 
